@@ -20,37 +20,37 @@
             user-select: none;
         }
 
-        .menu-container {
+        .menu-wrapper {
             position: absolute;
             top: 50%;
             left: 20%;
             transform: translateY(-50%);
             width: 450px;
-            background: #060606;
-            border-radius: 4px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
             display: none;
-            overflow: hidden;
+            flex-direction: column;
+            gap: 10px; /* Espace entre bannière, menu et footer */
         }
 
-        .menu-container.active {
-            display: block;
+        .menu-wrapper.active {
+            display: flex;
         }
 
         /* Banner styling */
         .menu-banner {
             width: 100%;
             height: 120px;
-            background-image: url('https://i.postimg.cc/zGNZg9C1/banner-bnz.jpg'); /* You can change this to any image */
+            background-image: url('https://i.postimg.cc/zGNZg9C1/banner-bnz.jpg');
             background-size: cover;
             background-position: center;
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
+            border-radius: 4px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
         }
 
-        /* If no image, we use a fallback background similar to the screenshot */
         .menu-banner::before {
             content: '';
             position: absolute;
@@ -74,40 +74,30 @@
             font-family: 'Brush Script MT', cursive, sans-serif;
         }
 
-        /* Tabs styling */
-        .menu-tabs {
+        /* Main Menu Container */
+        .menu-container {
+            background: #060606;
+            border-radius: 4px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+        }
+
+        /* Header / Breadcrumb */
+        .menu-header {
             display: flex;
+            align-items: center;
             background: #0a0a0a;
             height: 35px;
             border-bottom: 1px solid #1a1a1a;
+            padding: 0 15px;
         }
 
-        .tab-btn {
-            flex: 1;
-            background: #050505;
-            border: none;
-            color: #a0a0a0;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
-        }
-
-        .tab-btn:not(:last-child)::after {
-            content: '';
-            position: absolute;
-            right: 0;
-            top: 15%;
-            height: 70%;
-            width: 1px;
-            background: #1a1a1a;
-        }
-
-        .tab-btn.active {
-            background: linear-gradient(180deg, #333333 0%, #111111 100%);
+        .header-title {
             color: #ffffff;
-            box-shadow: inset 0 2px 0 rgba(255,255,255,0.1);
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         /* Content area with left scrollbar */
@@ -138,7 +128,7 @@
 
         .menu-list {
             flex: 1;
-            overflow: hidden; /* We handle scrolling manually */
+            overflow: hidden;
             padding: 5px 0;
             position: relative;
         }
@@ -160,6 +150,12 @@
             z-index: 2;
         }
 
+        .item-icon {
+            color: #666;
+            font-size: 14px;
+            z-index: 2;
+        }
+
         /* Selected item gradient effect */
         .menu-item.selected {
             background: linear-gradient(180deg, #444444 0%, #1a1a1a 100%);
@@ -176,7 +172,8 @@
             z-index: 3;
         }
 
-        .menu-item.selected .item-label {
+        .menu-item.selected .item-label,
+        .menu-item.selected .item-icon {
             color: #ffffff;
             font-weight: 500;
         }
@@ -215,7 +212,7 @@
         }
 
         .toggle-container.active {
-            background: #ffffff; /* White background when active */
+            background: #ffffff;
         }
 
         .toggle-thumb {
@@ -232,14 +229,15 @@
 
         .toggle-container.active .toggle-thumb {
             left: 18px;
-            background: #000000; /* Black thumb when active */
+            background: #000000;
         }
 
         /* Footer */
         .menu-footer {
             height: 25px;
             background: #000000;
-            border-top: 1px solid #111;
+            border-radius: 4px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -258,21 +256,23 @@
     </style>
 </head>
 <body>
-    <div class="menu-container" id="menuContainer">
+    <div class="menu-wrapper" id="menuWrapper">
         <div class="menu-banner">
             <div class="banner-text">Bnz"</div>
         </div>
 
-        <div class="menu-tabs" id="menuTabs">
-            <!-- Tabs injected here -->
-        </div>
-
-        <div class="content-wrapper">
-            <div class="scroll-track">
-                <div class="scroll-thumb" id="scrollThumb"></div>
+        <div class="menu-container">
+            <div class="menu-header">
+                <span class="header-title" id="headerTitle">MAIN MENU</span>
             </div>
-            <div class="menu-list" id="menuList">
-                <!-- Items injected here -->
+
+            <div class="content-wrapper">
+                <div class="scroll-track">
+                    <div class="scroll-thumb" id="scrollThumb"></div>
+                </div>
+                <div class="menu-list" id="menuList">
+                    <!-- Items injected here -->
+                </div>
             </div>
         </div>
 
@@ -283,19 +283,38 @@
     </div>
 
     <script>
-        // Sample data structure matching the screenshot
-        const menuData = [
-            {
-                name: "Player List",
+        // Menu Data Structure with Submenus
+        const menuData = {
+            id: "main",
+            name: "MAIN MENU",
+            items: [
+                { type: "submenu", label: "Player", target: "player" },
+                { type: "submenu", label: "Online", target: "online" },
+                { type: "submenu", label: "Vehicle", target: "vehicle" },
+                { type: "submenu", label: "Weapon", target: "weapon" },
+                { type: "submenu", label: "Misc", target: "misc" },
+                { type: "submenu", label: "Settings", target: "settings" }
+            ]
+        };
+
+        const submenus = {
+            "player": {
+                name: "PLAYER OPTIONS",
                 items: [
-                    { type: "button", label: "Refresh Players" }
+                    { type: "button", label: "Heal" },
+                    { type: "button", label: "Armor" },
+                    { type: "divider", label: "movement" },
+                    { type: "toggle", label: "Godmode", value: false },
+                    { type: "toggle", label: "Noclip", value: false },
+                    { type: "toggle", label: "Super Jump", value: false }
                 ]
             },
-            {
-                name: "Troll",
+            "online": {
+                name: "ONLINE PLAYERS",
                 items: [
+                    { type: "button", label: "Refresh List" },
+                    { type: "divider", label: "troll" },
                     { type: "button", label: "Rain Vehicle" },
-                    { type: "divider", label: "other" },
                     { type: "button", label: "Cage Player" },
                     { type: "button", label: "Attach Car" },
                     { type: "divider", label: "attach" },
@@ -305,72 +324,89 @@
                     { type: "toggle", label: "piggyback", value: false }
                 ]
             },
-            {
-                name: "Vehicle",
+            "vehicle": {
+                name: "VEHICLE OPTIONS",
                 items: [
                     { type: "button", label: "Spawn Custom" },
-                    { type: "toggle", label: "Godmode", value: false }
+                    { type: "button", label: "Fix Vehicle" },
+                    { type: "button", label: "Clean Vehicle" },
+                    { type: "divider", label: "toggles" },
+                    { type: "toggle", label: "Vehicle Godmode", value: false },
+                    { type: "toggle", label: "Infinite Fuel", value: false }
                 ]
             },
-            {
-                name: "all",
+            "weapon": {
+                name: "WEAPON OPTIONS",
                 items: [
-                    { type: "button", label: "Kick All" }
+                    { type: "button", label: "Give All Weapons" },
+                    { type: "button", label: "Remove All Weapons" },
+                    { type: "divider", label: "mods" },
+                    { type: "toggle", label: "Infinite Ammo", value: false },
+                    { type: "toggle", label: "No Reload", value: false },
+                    { type: "toggle", label: "Explosive Ammo", value: false }
+                ]
+            },
+            "misc": {
+                name: "MISC OPTIONS",
+                items: [
+                    { type: "button", label: "Clear Area" },
+                    { type: "toggle", label: "Never Wanted", value: false },
+                    { type: "toggle", label: "Off Radar", value: false }
+                ]
+            },
+            "settings": {
+                name: "SETTINGS",
+                items: [
+                    { type: "button", label: "Save Config" },
+                    { type: "button", label: "Load Config" }
                 ]
             }
-        ];
+        };
 
-        let currentTab = 1; // Default to "Troll"
+        // Navigation state
+        let menuHistory = [menuData]; // Stack of current menu path
         let currentIndex = 0;
-        let visibleItems = [];
         let menuVisible = false;
-        const visibleItemCount = 10; // How many items show at once
+        const visibleItemCount = 10;
+
+        function getCurrentMenu() {
+            return menuHistory[menuHistory.length - 1];
+        }
+
+        function getVisibleItems() {
+            return getCurrentMenu().items;
+        }
 
         function initMenu() {
-            renderTabs();
-            updateVisibleItems();
+            document.getElementById('headerTitle').textContent = getCurrentMenu().name;
+            updateIndex();
             renderList();
         }
 
-        function renderTabs() {
-            const tabsContainer = document.getElementById('menuTabs');
-            tabsContainer.innerHTML = '';
-            
-            menuData.forEach((tab, index) => {
-                const btn = document.createElement('button');
-                btn.className = `tab-btn ${index === currentTab ? 'active' : ''}`;
-                btn.textContent = tab.name;
-                tabsContainer.appendChild(btn);
-            });
-        }
-
-        function updateVisibleItems() {
-            visibleItems = menuData[currentTab].items;
-            
-            // Validate index
-            if (currentIndex >= visibleItems.length) {
-                currentIndex = Math.max(0, visibleItems.length - 1);
+        function updateIndex() {
+            const items = getVisibleItems();
+            if (currentIndex >= items.length) {
+                currentIndex = Math.max(0, items.length - 1);
             }
             
-            // Skip dividers when moving
-            if (visibleItems.length > 0 && visibleItems[currentIndex].type === 'divider') {
+            // Skip dividers
+            if (items.length > 0 && items[currentIndex].type === 'divider') {
                 navigateNext();
             }
         }
 
-        // Calculate view window (which items to show based on scroll)
         function getScrollWindow() {
+            const items = getVisibleItems();
             let startIdx = 0;
             
-            if (visibleItems.length > visibleItemCount) {
+            if (items.length > visibleItemCount) {
                 if (currentIndex >= visibleItemCount - 2) {
                     startIdx = Math.min(
                         currentIndex - (visibleItemCount - 3),
-                        visibleItems.length - visibleItemCount
+                        items.length - visibleItemCount
                     );
                 }
             }
-            
             return startIdx;
         }
 
@@ -378,13 +414,14 @@
             const listContainer = document.getElementById('menuList');
             listContainer.innerHTML = '';
             
-            if (visibleItems.length === 0) return;
+            const items = getVisibleItems();
+            if (items.length === 0) return;
             
             const startIdx = getScrollWindow();
-            const endIdx = Math.min(startIdx + visibleItemCount, visibleItems.length);
+            const endIdx = Math.min(startIdx + visibleItemCount, items.length);
             
             for (let i = startIdx; i < endIdx; i++) {
-                const item = visibleItems[i];
+                const item = items[i];
                 
                 if (item.type === 'divider') {
                     const div = document.createElement('div');
@@ -411,40 +448,44 @@
                     toggle.className = `toggle-container ${item.value ? 'active' : ''}`;
                     toggle.innerHTML = '<div class="toggle-thumb"></div>';
                     div.appendChild(toggle);
+                } else if (item.type === 'submenu') {
+                    const icon = document.createElement('div');
+                    icon.className = 'item-icon';
+                    icon.textContent = '▶';
+                    div.appendChild(icon);
                 }
                 
                 listContainer.appendChild(div);
             }
             
-            updateScrollbar(startIdx);
-            updateFooter();
+            updateScrollbar(startIdx, items.length);
+            updateFooter(items);
         }
 
-        function updateScrollbar(startIdx) {
+        function updateScrollbar(startIdx, totalLength) {
             const thumb = document.getElementById('scrollThumb');
             
-            if (visibleItems.length <= visibleItemCount) {
+            if (totalLength <= visibleItemCount) {
                 thumb.style.height = '100%';
                 thumb.style.top = '0';
                 return;
             }
             
-            const ratio = visibleItemCount / visibleItems.length;
-            const thumbHeight = Math.max(20, ratio * 400); // 400 is track height
+            const ratio = visibleItemCount / totalLength;
+            const thumbHeight = Math.max(20, ratio * 400);
             thumb.style.height = `${thumbHeight}px`;
             
-            const scrollRatio = startIdx / (visibleItems.length - visibleItemCount);
+            const scrollRatio = startIdx / (totalLength - visibleItemCount);
             const maxTop = 400 - thumbHeight;
             thumb.style.top = `${scrollRatio * maxTop}px`;
         }
 
-        function updateFooter() {
-            // Count actual selectable items (ignore dividers) for the current index
+        function updateFooter(items) {
             let selectableTotal = 0;
             let currentSelectableIdx = 0;
             
-            for (let i = 0; i < visibleItems.length; i++) {
-                if (visibleItems[i].type !== 'divider') {
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].type !== 'divider') {
                     selectableTotal++;
                     if (i <= currentIndex) {
                         currentSelectableIdx++;
@@ -456,20 +497,45 @@
         }
 
         function navigateNext() {
+            const items = getVisibleItems();
             do {
-                currentIndex = (currentIndex + 1) % visibleItems.length;
-            } while (visibleItems[currentIndex].type === 'divider');
+                currentIndex = (currentIndex + 1) % items.length;
+            } while (items[currentIndex].type === 'divider');
         }
 
         function navigatePrev() {
+            const items = getVisibleItems();
             do {
-                currentIndex = (currentIndex - 1 + visibleItems.length) % visibleItems.length;
-            } while (visibleItems[currentIndex].type === 'divider');
+                currentIndex = (currentIndex - 1 + items.length) % items.length;
+            } while (items[currentIndex].type === 'divider');
+        }
+
+        function goBack() {
+            if (menuHistory.length > 1) {
+                menuHistory.pop();
+                currentIndex = 0;
+                initMenu();
+                
+                window.parent.postMessage(JSON.stringify({
+                    type: 'sound',
+                    action: 'back'
+                }), '*');
+            }
         }
 
         function handleAction() {
-            const item = visibleItems[currentIndex];
+            const item = getVisibleItems()[currentIndex];
             if (item.type === 'divider') return;
+            
+            if (item.type === 'submenu') {
+                const submenuData = submenus[item.target];
+                if (submenuData) {
+                    menuHistory.push(submenuData);
+                    currentIndex = 0;
+                    initMenu();
+                }
+                return;
+            }
             
             if (item.type === 'toggle') {
                 item.value = !item.value;
@@ -479,25 +545,24 @@
             // Send to Lua
             window.parent.postMessage(JSON.stringify({
                 type: 'action',
-                tab: menuData[currentTab].name,
+                menu: getCurrentMenu().name,
                 action: item.label,
                 value: item.value
             }), '*');
         }
 
-        // Event Listener for NUI/Lua
         window.addEventListener('message', function(event) {
             const data = event.data;
             if (!data) return;
             
             if (data.action === 'showUI') {
                 menuVisible = data.visible;
-                const container = document.getElementById('menuContainer');
+                const wrapper = document.getElementById('menuWrapper');
                 if (menuVisible) {
-                    container.classList.add('active');
+                    wrapper.classList.add('active');
                     initMenu();
                 } else {
-                    container.classList.remove('active');
+                    wrapper.classList.remove('active');
                 }
             }
             
@@ -510,23 +575,15 @@
                     navigateNext();
                     renderList();
                 }
-                else if (data.key === 'ArrowLeft') {
-                    currentTab = (currentTab - 1 + menuData.length) % menuData.length;
-                    currentIndex = 0;
-                    initMenu();
-                }
-                else if (data.key === 'ArrowRight') {
-                    currentTab = (currentTab + 1) % menuData.length;
-                    currentIndex = 0;
-                    initMenu();
-                }
-                else if (data.key === 'Enter') {
+                else if (data.key === 'Enter' || data.key === 'ArrowRight') {
                     handleAction();
+                }
+                else if (data.key === 'Backspace' || data.key === 'ArrowLeft') {
+                    goBack();
                 }
             }
         });
 
-        // Initialize for preview
         initMenu();
     </script>
 </body>
