@@ -20,19 +20,49 @@
             user-select: none;
         }
 
-        .menu-wrapper {
+        /* Container principal positionné en haut à gauche */
+        .app-container {
             position: absolute;
-            top: 50%;
-            left: 20%;
-            transform: translateY(-50%);
-            width: 450px;
+            top: 15%; /* Plus en haut */
+            left: 5%; /* Plus à gauche */
             display: none;
-            flex-direction: column;
-            gap: 10px; /* Espace entre bannière, menu et footer */
+            flex-direction: row; /* Pour mettre la scrollbar à côté du menu */
+            gap: 10px;
         }
 
-        .menu-wrapper.active {
+        .app-container.active {
             display: flex;
+        }
+
+        /* Scrollbar externe à gauche */
+        .external-scrollbar {
+            width: 8px;
+            height: 380px; /* Aligné avec la hauteur du contenu du menu */
+            background: #222;
+            border-radius: 4px;
+            position: relative;
+            margin-top: 165px; /* Décalage pour s'aligner sous la bannière et le header */
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.8), inset 0 0 2px rgba(0,0,0,0.5);
+            border: 1px solid #111;
+        }
+
+        .scroll-thumb {
+            width: 100%;
+            background: #8b00ff; /* Violet Bnz */
+            border-radius: 4px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            transition: top 0.1s ease;
+            box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Wrapper du menu entier */
+        .menu-wrapper {
+            width: 380px; /* Menu moins large */
+            display: flex;
+            flex-direction: column;
+            gap: 8px; /* Espace réduit entre les blocs */
         }
 
         /* Banner styling */
@@ -46,9 +76,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            border-radius: 4px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
-            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+            border: 1px solid #111;
         }
 
         .menu-banner::before {
@@ -58,7 +87,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(30,30,30,0.8) 0%, rgba(10,10,10,0.9) 100%);
+            background: linear-gradient(135deg, rgba(139, 0, 255, 0.4) 0%, rgba(10, 10, 10, 0.8) 100%); /* Teinte violette */
             z-index: 1;
         }
 
@@ -66,110 +95,77 @@
             position: relative;
             z-index: 2;
             color: #ffffff;
-            font-size: 48px;
+            font-size: 56px;
             font-weight: 700;
             font-style: italic;
-            text-shadow: 0 0 10px rgba(255,255,255,0.5), 2px 2px 4px rgba(0,0,0,0.8);
+            text-shadow: 0 0 15px rgba(139, 0, 255, 0.8), 2px 2px 4px rgba(0,0,0,0.8);
             letter-spacing: 2px;
             font-family: 'Brush Script MT', cursive, sans-serif;
         }
 
-        /* Main Menu Container */
-        .menu-container {
-            background: #060606;
-            border-radius: 4px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-            overflow: hidden;
-        }
-
-        /* Header / Breadcrumb */
+        /* Header (Main Menu) */
         .menu-header {
-            display: flex;
-            align-items: center;
-            background: #0a0a0a;
+            background: #000000;
             height: 35px;
-            border-bottom: 1px solid #1a1a1a;
-            padding: 0 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #111;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
         }
 
         .header-title {
             color: #ffffff;
             font-size: 14px;
             font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
 
-        /* Content area with left scrollbar */
+        /* Content area */
         .content-wrapper {
-            display: flex;
-            height: 400px;
-            background: #030303;
-            position: relative;
-        }
-
-        /* Custom scrollbar on the left */
-        .scroll-track {
-            width: 6px;
+            height: 380px;
             background: #0a0a0a;
-            height: 100%;
             position: relative;
-        }
-
-        .scroll-thumb {
-            width: 4px;
-            background: #555;
-            border-radius: 2px;
-            position: absolute;
-            left: 1px;
-            top: 0;
-            transition: top 0.1s ease;
+            border: 1px solid #111;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .menu-list {
             flex: 1;
-            overflow: hidden;
-            padding: 5px 0;
+            padding: 2px 0;
             position: relative;
         }
 
         /* Menu Items */
         .menu-item {
-            padding: 12px 15px;
+            padding: 10px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: relative;
-            height: 40px;
+            height: 38px; /* Hauteur ajustée */
         }
 
         .item-label {
-            color: #e0e0e0;
-            font-size: 13px;
+            color: #d0d0d0;
+            font-size: 14px;
             font-weight: 400;
             z-index: 2;
         }
 
         .item-icon {
-            color: #666;
+            color: #888;
             font-size: 14px;
+            font-weight: 700;
             z-index: 2;
         }
 
-        /* Selected item gradient effect */
+        /* Selected item gradient effect violet */
         .menu-item.selected {
-            background: linear-gradient(180deg, #444444 0%, #1a1a1a 100%);
-        }
-
-        .menu-item.selected::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 2px;
-            background: #ffffff;
-            z-index: 3;
+            background: linear-gradient(90deg, #6600cc 0%, #400080 100%);
         }
 
         .menu-item.selected .item-label,
@@ -183,7 +179,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 40px;
+            height: 38px;
             padding: 0 15px;
         }
 
@@ -202,22 +198,22 @@
 
         /* iOS style toggles */
         .toggle-container {
-            width: 36px;
-            height: 20px;
-            background: #2a2a2a;
-            border-radius: 10px;
+            width: 32px;
+            height: 18px;
+            background: #333;
+            border-radius: 9px;
             position: relative;
             z-index: 2;
             transition: background 0.3s;
         }
 
         .toggle-container.active {
-            background: #ffffff;
+            background: #8b00ff; /* Violet actif */
         }
 
         .toggle-thumb {
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             background: #ffffff;
             border-radius: 50%;
             position: absolute;
@@ -228,16 +224,16 @@
         }
 
         .toggle-container.active .toggle-thumb {
-            left: 18px;
-            background: #000000;
+            left: 16px;
         }
 
-        /* Footer */
+        /* Footer plus grand */
         .menu-footer {
-            height: 25px;
+            height: 35px; /* Agrandissement de la hauteur */
             background: #000000;
             border-radius: 4px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+            border: 1px solid #111;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -245,40 +241,44 @@
         }
 
         .footer-text {
-            color: #777;
-            font-size: 11px;
+            color: #e0e0e0; /* Texte plus clair */
+            font-size: 12px; /* Police plus grande */
+            font-weight: 500;
         }
 
         .footer-counter {
-            color: #777;
-            font-size: 11px;
+            color: #e0e0e0;
+            font-size: 12px;
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
-    <div class="menu-wrapper" id="menuWrapper">
-        <div class="menu-banner">
-            <div class="banner-text">Bnz"</div>
+    <div class="app-container" id="appContainer">
+        <!-- Scrollbar externe gauche -->
+        <div class="external-scrollbar">
+            <div class="scroll-thumb" id="scrollThumb"></div>
         </div>
 
-        <div class="menu-container">
+        <div class="menu-wrapper">
+            <div class="menu-banner">
+                <div class="banner-text">Bnz'</div>
+            </div>
+
             <div class="menu-header">
-                <span class="header-title" id="headerTitle">MAIN MENU</span>
+                <span class="header-title" id="headerTitle">Main Menu</span>
             </div>
 
             <div class="content-wrapper">
-                <div class="scroll-track">
-                    <div class="scroll-thumb" id="scrollThumb"></div>
-                </div>
                 <div class="menu-list" id="menuList">
                     <!-- Items injected here -->
                 </div>
             </div>
-        </div>
 
-        <div class="menu-footer">
-            <div class="footer-text">.gg/JAJYK5Aa</div>
-            <div class="footer-counter" id="footerCounter">1/1</div>
+            <div class="menu-footer">
+                <div class="footer-text">Made By Bnz' | .gg/BftTJpnghy</div>
+                <div class="footer-counter" id="footerCounter">1/1</div>
+            </div>
         </div>
     </div>
 
@@ -286,76 +286,67 @@
         // Menu Data Structure with Submenus
         const menuData = {
             id: "main",
-            name: "MAIN MENU",
+            name: "Main Menu",
             items: [
                 { type: "submenu", label: "Player", target: "player" },
                 { type: "submenu", label: "Online", target: "online" },
+                { type: "submenu", label: "Visual", target: "visual" },
+                { type: "submenu", label: "Combat", target: "combat" },
                 { type: "submenu", label: "Vehicle", target: "vehicle" },
-                { type: "submenu", label: "Weapon", target: "weapon" },
-                { type: "submenu", label: "Misc", target: "misc" },
+                { type: "submenu", label: "Miscellaneous", target: "misc" },
                 { type: "submenu", label: "Settings", target: "settings" }
             ]
         };
 
         const submenus = {
             "player": {
-                name: "PLAYER OPTIONS",
+                name: "Player",
                 items: [
                     { type: "button", label: "Heal" },
                     { type: "button", label: "Armor" },
-                    { type: "divider", label: "movement" },
                     { type: "toggle", label: "Godmode", value: false },
-                    { type: "toggle", label: "Noclip", value: false },
-                    { type: "toggle", label: "Super Jump", value: false }
+                    { type: "toggle", label: "Noclip", value: false }
                 ]
             },
             "online": {
-                name: "ONLINE PLAYERS",
+                name: "Online",
                 items: [
-                    { type: "button", label: "Refresh List" },
-                    { type: "divider", label: "troll" },
-                    { type: "button", label: "Rain Vehicle" },
-                    { type: "button", label: "Cage Player" },
-                    { type: "button", label: "Attach Car" },
-                    { type: "divider", label: "attach" },
-                    { type: "toggle", label: "twerk", value: false },
-                    { type: "toggle", label: "baise le", value: false },
-                    { type: "toggle", label: "branlette", value: false },
-                    { type: "toggle", label: "piggyback", value: false }
+                    { type: "button", label: "Player List" },
+                    { type: "button", label: "Teleport To Waypoint" }
+                ]
+            },
+            "visual": {
+                name: "Visual",
+                items: [
+                    { type: "toggle", label: "Player ESP", value: false },
+                    { type: "toggle", label: "Vehicle ESP", value: false }
+                ]
+            },
+            "combat": {
+                name: "Combat",
+                items: [
+                    { type: "button", label: "Give All Weapons" },
+                    { type: "toggle", label: "Infinite Ammo", value: false },
+                    { type: "toggle", label: "No Recoil", value: false }
                 ]
             },
             "vehicle": {
-                name: "VEHICLE OPTIONS",
+                name: "Vehicle",
                 items: [
-                    { type: "button", label: "Spawn Custom" },
-                    { type: "button", label: "Fix Vehicle" },
-                    { type: "button", label: "Clean Vehicle" },
-                    { type: "divider", label: "toggles" },
-                    { type: "toggle", label: "Vehicle Godmode", value: false },
-                    { type: "toggle", label: "Infinite Fuel", value: false }
-                ]
-            },
-            "weapon": {
-                name: "WEAPON OPTIONS",
-                items: [
-                    { type: "button", label: "Give All Weapons" },
-                    { type: "button", label: "Remove All Weapons" },
-                    { type: "divider", label: "mods" },
-                    { type: "toggle", label: "Infinite Ammo", value: false },
-                    { type: "toggle", label: "No Reload", value: false },
-                    { type: "toggle", label: "Explosive Ammo", value: false }
+                    { type: "button", label: "Spawn Vehicle" },
+                    { type: "button", label: "Repair" },
+                    { type: "toggle", label: "Vehicle Godmode", value: false }
                 ]
             },
             "misc": {
-                name: "MISC OPTIONS",
+                name: "Miscellaneous",
                 items: [
                     { type: "button", label: "Clear Area" },
-                    { type: "toggle", label: "Never Wanted", value: false },
-                    { type: "toggle", label: "Off Radar", value: false }
+                    { type: "toggle", label: "Never Wanted", value: false }
                 ]
             },
             "settings": {
-                name: "SETTINGS",
+                name: "Settings",
                 items: [
                     { type: "button", label: "Save Config" },
                     { type: "button", label: "Load Config" }
@@ -451,7 +442,7 @@
                 } else if (item.type === 'submenu') {
                     const icon = document.createElement('div');
                     icon.className = 'item-icon';
-                    icon.textContent = '▶';
+                    icon.textContent = '›'; // Icône style Bnz'
                     div.appendChild(icon);
                 }
                 
@@ -472,11 +463,11 @@
             }
             
             const ratio = visibleItemCount / totalLength;
-            const thumbHeight = Math.max(20, ratio * 400);
+            const thumbHeight = Math.max(20, ratio * 380); // 380 est la hauteur de la barre
             thumb.style.height = `${thumbHeight}px`;
             
             const scrollRatio = startIdx / (totalLength - visibleItemCount);
-            const maxTop = 400 - thumbHeight;
+            const maxTop = 380 - thumbHeight;
             thumb.style.top = `${scrollRatio * maxTop}px`;
         }
 
@@ -557,7 +548,7 @@
             
             if (data.action === 'showUI') {
                 menuVisible = data.visible;
-                const wrapper = document.getElementById('menuWrapper');
+                const wrapper = document.getElementById('appContainer');
                 if (menuVisible) {
                     wrapper.classList.add('active');
                     initMenu();
