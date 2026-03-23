@@ -72,49 +72,15 @@ local function HandleMenuAction(data)
     local message = json.decode(data)
     
     if message.type == "action" then
-        print(string.format("[BNZ MENU] Tab: %s | Action: %s | Value: %s", 
-            message.tab or "N/A", 
+        print(string.format("[BNZ MENU] Menu: %s | Action: %s | Value: %s", 
+            message.menu or "N/A", 
             message.action or "N/A", 
             tostring(message.value)
         ))
-        
-        -- Player List Tab
-        if message.tab == "Player List" then
-            if message.action == "Refresh Players" then
-                print("[BNZ MENU] Refreshing player list...")
-            end
-            
-        -- Troll Tab
-        elseif message.tab == "Troll" then
-            if message.action == "Rain Vehicle" then
-                print("[BNZ MENU] Raining vehicles!")
-            elseif message.action == "Cage Player" then
-                print("[BNZ MENU] Caging player...")
-            elseif message.action == "Attach Car" then
-                print("[BNZ MENU] Attaching car...")
-            elseif message.action == "twerk" then
-                print("[BNZ MENU] Twerk animation: " .. tostring(message.value))
-            elseif message.action == "baise le" then
-                print("[BNZ MENU] Animation 1: " .. tostring(message.value))
-            elseif message.action == "branlette" then
-                print("[BNZ MENU] Animation 2: " .. tostring(message.value))
-            elseif message.action == "piggyback" then
-                print("[BNZ MENU] Piggyback: " .. tostring(message.value))
-            end
-            
-        -- Vehicle Tab
-        elseif message.tab == "Vehicle" then
-            if message.action == "Spawn Custom" then
-                print("[BNZ MENU] Spawning custom vehicle...")
-            elseif message.action == "Godmode" then
-                print("[BNZ MENU] Vehicle godmode: " .. tostring(message.value))
-            end
-            
-        -- All Tab
-        elseif message.tab == "all" then
-            if message.action == "Kick All" then
-                print("[BNZ MENU] Kicking all players...")
-            end
+    elseif message.type == "sound" then
+        if message.action == "back" then
+            -- On pourrait jouer un son de retour ici si supporté
+            print("[BNZ MENU] Retour au menu précédent")
         end
     end
 end
@@ -135,31 +101,37 @@ local function StartMenuThread()
             end
             
             if MenuVisible then
+                -- Navigation Up/Down
                 if IsControlJustPressed(0, 172) then
                     SendKeyToMenu("ArrowUp")
                 end
-                
                 if IsControlJustPressed(0, 173) then
                     SendKeyToMenu("ArrowDown")
                 end
                 
+                -- Navigation Left/Right (Back/Forward)
                 if IsControlJustPressed(0, 174) then
                     SendKeyToMenu("ArrowLeft")
                 end
-                
                 if IsControlJustPressed(0, 175) then
                     SendKeyToMenu("ArrowRight")
                 end
                 
+                -- Select
                 if IsControlJustPressed(0, 191) then
                     SendKeyToMenu("Enter")
+                end
+                
+                -- Back
+                if IsControlJustPressed(0, 194) then
+                    SendKeyToMenu("Backspace")
                 end
             end
         end
     end)
     
     print("[BNZ MENU] Thread de contrôle démarré")
-    print("[BNZ MENU] Navigation: Flèches, Enter")
+    print("[BNZ MENU] Navigation: Flèches, Enter, Backspace")
 end
 
 local function StopMenuThread()
