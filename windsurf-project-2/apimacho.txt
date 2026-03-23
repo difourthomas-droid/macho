@@ -1,0 +1,227 @@
+NUI/DUI UI Injection
+This page will cover injection into the NUI/DUI global state. This is not V8 scripting, this will allow you to easily interact with UI pages from Macho.
+
+MachoInjectJavaScript([string] code) -> void
+
+This will inject your JavaScript into the Chromium Embedded Framework which is used to run UI pages on FiveM.
+
+Example:
+MachoInjectJavaScript([[ console.log("Hello World"); ]])
+
+Macho DUI
+This page will cover our screenshot-proof DUI menus API.
+
+MachoCreateDui([string] url) -> dui_handle
+
+This will create a DUI window, rendering is handled by us in the backend. The default dimensions are the same as the games resolution. By default, this menu is hidden.
+
+MachoShowDui([dui_handle] dui) -> void
+MachoHideDui([dui_handle] dui) -> void
+
+These can be used to show/hide the DUI menu, you could also use transparency in the DUI menu itself instead. They are just designed to aid debugging, and also allow a period whilst the menu loads.
+
+MachoDestroyDui([dui_handle] dui) -> void
+
+Destroys a DUI window.
+
+MachoSendDuiMessage([dui_handle] dui, [string] json) -> void
+
+This will post a message event to the DUI window. You can catch this using window.addEventListener("message", ...) inside your javascript code on the page.
+
+MachoExecuteDuiScript([dui_handle] dui, [string] script) -> void
+
+This allows you to inject javascript code directly into your DUI window. This could be used to run your UI using purely javascript, so it can be self-contained within your lua code.
+
+Graphics Programming
+This page will cover resource injection. Resource injection allows you to execute in the context of a legitimate resource, allowing you to access their global functions and data, this includes things like their TriggerServerEvent function, allowing you to potentially bypass event tokenization, depending on the anti-cheat. The resource name can be found by navigating to our Resources tab, or you can always chose "any".
+
+APIs
+These are the APIs exposed to the user.
+
+Widgets all have a return value for a reference of the widget which can be passed to other functions such as MachoMenuGetInputbox/MachoMenuSetText.
+
+Fields labelled 'WindowReference' require the result of MachoMenuWindow.
+Fields labelled 'GroupReference' require the result of MachoMenuGroup - the framework will place the widget in the group referenced.
+Fields labelled 'WidgetReference' require the result of a widget creation - for example MachoMenuGetInputbox requires the result of MachoMenuInputBox.
+Window Creation
+MachoMenuWindow([float] PositionX, [float] PositionY, [float] EndPositionX, [float] EndPositionY) -> handle
+
+Return value is the handle/reference to all other widgets/child sections for this window
+
+MachoMenuTabbedWindow([string] Name, [float] PosX, [float] PosX, [float] PosY, [float] SizeX, [float] SizeY, [float] TabSectionWidth) -> handle
+
+MachoMenuDestroy([handle] WindowReference) -> void
+
+MachoMenuSetAccent([Handle] WindowReference, [float] r, [float] g, [float] b) -> void
+
+MachoMenuSetKeybind([Handle] WindowReference, [int] Keybind)
+
+This will override the keybind used by the menu. Check here for values. MachoMenuSetKeybind(WindowHandle, 0x2E) will use DELETE.
+
+Widget Sections
+MachoMenuGroup([handle] WindowReference OR TabReference, [string] Name, [float] PositionX, [float] PositionY, [float] EndPositionX, [float] EndPositionY)
+
+Creates a child window/section and returns the handle to it.
+
+Tabs
+MachoMenuSmallText([handle] WindowReference, [string] Text)
+
+MachoMenuAddTab([handle] WindowReference, [string] Name)
+
+Creates a tab on the left, returns a handle to it (pass to widgets)
+
+Widgets
+MachoMenuButton([handle] GroupReference, [string] Name, [function] Callback)
+
+Callback invoked when pressed
+
+MachoMenuCheckbox([handle] GroupReference, [string] Name, [function] CallbackEnabled, [function] CallbackDisabled)
+
+MachoMenuSlider([handle] GroupReference, [string] Name, [float] DefaultValue, [float] Minimum, [float] Maximum, [string] Unit, [int] DecimalPrecision, [function] Callback)
+
+MachoMenuText([handle] GroupReference, [string] Text)
+
+MachoMenuSetText([handle] WidgetReference, [string] Text)
+
+Function overrides the text of a widget
+
+MachoMenuInputbox([handle] GroupReference, [string] Text, [string] Placeholder)
+
+MachoMenuGetInputbox([handle] WidgetReference)
+
+This function returns a string for a previously created input box
+
+MachoMenuDropDown([handle] GroupReference, [string] Name, [function] Callback, [string] Selectable1, [string] Selectable2...)
+
+Screenshot-proof NUI
+This is currently a work-in-progress. Coming soon...
+
+Full Examples
+We provide two basic examples.
+
+local MenuSize = vec2(500, 300)
+local MenuStartCoords = vec2(500, 500) 
+
+local TabsBarWidth = 0 -- The width of the tabs bar, height is assumed to be MenuHeight as it goes top to bottom
+
+local SectionChildWidth = MenuSize.x - TabsBarWidth -- The total size for sections on the left hand side
+local SectionsCount = 3 
+local SectionsPadding = 10 -- pixels between each section (that makes SetionCount + 1 = total padding areas)
+local MachoPaneGap = 10 -- Hard coded gap of accent at the top.
+
+-- Therefore each section width must be:
+local EachSectionWidth = (SectionChildWidth - (SectionsPadding * (SectionsCount + 1))) / SectionsCount
+
+
+-- Now you have each sections absolute width, you can calculate their X coordinate and Y coordinate
+local SectionOneStart = vec2(TabsBarWidth + (SectionsPadding * 1) + (EachSectionWidth * 0), SectionsPadding + MachoPaneGap)
+local SectionOneEnd = vec2(SectionOneStart.x + EachSectionWidth, MenuSize.y - SectionsPadding)
+
+local SectionTwoStart = vec2(TabsBarWidth + (SectionsPadding * 2) + (EachSectionWidth * 1), SectionsPadding + MachoPaneGap)
+local SectionTwoEnd = vec2(SectionTwoStart.x + EachSectionWidth, MenuSize.y - SectionsPadding)
+
+local SectionThreeStart = vec2(TabsBarWidth + (SectionsPadding * 3) + (EachSectionWidth * 2), SectionsPadding + MachoPaneGap)
+local SectionThreeEnd = vec2(SectionThreeStart.x + EachSectionWidth, MenuSize.y - SectionsPadding)
+
+-- Create our window, MenuStartCoords is where the menu starts
+MenuWindow = MachoMenuWindow(MenuStartCoords.x, MenuStartCoords.y, MenuSize.x, MenuSize.y)
+
+MachoMenuSetAccent(MenuWindow, 137, 52, 235)
+
+
+-- First tab
+FirstSection = MachoMenuGroup(MenuWindow, "Section One", SectionOneStart.x, SectionOneStart.y, SectionOneEnd.x, SectionOneEnd.y)
+
+MachoMenuButton(FirstSection, "Close", function()
+    MachoMenuDestroy(MenuWindow)
+  end)
+
+-- Second tab
+SecondSection = MachoMenuGroup(MenuWindow, "Section Two", SectionTwoStart.x, SectionTwoStart.y, SectionTwoEnd.x, SectionTwoEnd.y)
+MachoMenuButton(SecondSection, "Close", function()
+    MachoMenuDestroy(MenuWindow)
+  end)
+
+-- Third tab
+ThirdSection = MachoMenuGroup(MenuWindow, "Section Three", SectionThreeStart.x, SectionThreeStart.y, SectionThreeEnd.x, SectionThreeEnd.y)
+MachoMenuButton(ThirdSection, "Close", function()
+    MachoMenuDestroy(MenuWindow)
+  end)
+local MenuSize = vec2(600, 350)
+local MenuStartCoords = vec2(500, 500) 
+
+local TabsBarWidth = 0 -- The width of the tabs bar, height is assumed to be MenuHeight as it goes top to bottom
+
+local SectionChildWidth = MenuSize.x - TabsBarWidth -- The total size for sections on the left hand side
+local SectionsCount = 3 
+local SectionsPadding = 10 -- pixels between each section (that makes SetionCount + 1 = total padding areas)
+local MachoPaneGap = 10 -- Hard coded gap of accent at the top.
+
+-- Therefore each section width must be:
+local EachSectionWidth = (SectionChildWidth - (SectionsPadding * (SectionsCount + 1))) / SectionsCount
+
+
+-- Now you have each sections absolute width, you can calculate their X coordinate and Y coordinate
+local SectionOneStart = vec2(TabsBarWidth + (SectionsPadding * 1) + (EachSectionWidth * 0), SectionsPadding + MachoPaneGap)
+local SectionOneEnd = vec2(SectionOneStart.x + EachSectionWidth, MenuSize.y - SectionsPadding)
+
+local SectionTwoStart = vec2(TabsBarWidth + (SectionsPadding * 2) + (EachSectionWidth * 1), SectionsPadding + MachoPaneGap)
+local SectionTwoEnd = vec2(SectionTwoStart.x + EachSectionWidth, MenuSize.y - SectionsPadding)
+
+local SectionThreeStart = vec2(TabsBarWidth + (SectionsPadding * 3) + (EachSectionWidth * 2), SectionsPadding + MachoPaneGap)
+local SectionThreeEnd = vec2(SectionThreeStart.x + EachSectionWidth, MenuSize.y - SectionsPadding)
+
+-- Create our window, MenuStartCoords is where the menu starts
+MenuWindow = MachoMenuWindow(MenuStartCoords.x, MenuStartCoords.y, MenuSize.x, MenuSize.y)
+
+MachoMenuSetAccent(MenuWindow, 137, 52, 235)
+
+
+-- First tab
+FirstSection = MachoMenuGroup(MenuWindow, "Section One", SectionOneStart.x, SectionOneStart.y, SectionOneEnd.x, SectionOneEnd.y)
+
+MachoMenuButton(FirstSection, "Close", function()
+    MachoMenuDestroy(MenuWindow)
+  end)
+
+-- Second tab
+SecondSection = MachoMenuGroup(MenuWindow, "Section Two", SectionTwoStart.x, SectionTwoStart.y, SectionTwoEnd.x, SectionTwoEnd.y)
+
+MenuSliderHandle = MachoMenuSlider(SecondSection, "Slider", 10, 0, 100, "%", 0, function(Value)
+    print("Slider updated with value ".. Value)
+end)
+
+MachoMenuCheckbox(SecondSection, "Checkbox", 
+    function()
+        print("Enabled")
+    end,
+    function()
+        print("Disabled")
+    end
+)
+
+TextHandle = MachoMenuText(SecondSection, "SomeText")
+
+MachoMenuButton(SecondSection, "Change Text Example", function()
+    MachoMenuSetText(TextHandle, "ChangedText")
+  end)
+
+
+-- Third tab
+ThirdSection = MachoMenuGroup(MenuWindow, "Section Three", SectionThreeStart.x, SectionThreeStart.y, SectionThreeEnd.x, SectionThreeEnd.y)
+
+InputBoxHandle = MachoMenuInputbox(ThirdSection, "Input", "...")
+MachoMenuButton(ThirdSection, "Print Input", function()
+    local LocatedText = MachoMenuGetInputbox(InputBoxHandle)
+    print(LocatedText)
+  end)
+
+DropDownHandle = MachoMenuDropDown(ThirdSection, "Drop Down", 
+    function(Index)
+        print("New Value is " .. Index)
+    end, 
+    "Selectable 1",
+    "Selectable 2",
+    "Selectable 3"
+)
+
