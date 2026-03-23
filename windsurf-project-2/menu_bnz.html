@@ -613,21 +613,21 @@
             box-shadow: 0 0 5px var(--primary-color);
         }
 
-        /* Keybind Modal - Refined Design */
+        /* Keybind Modal - Simple & Beautiful */
         .bind-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(15px);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 3000;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.2s ease;
         }
 
         .bind-modal.active {
@@ -636,66 +636,62 @@
         }
 
         .bind-content {
-            background: rgba(15, 15, 15, 0.95);
-            border: 1px solid rgba(139, 0, 255, 0.3);
+            background: rgba(20, 20, 20, 0.95);
+            border: 1px solid rgba(139, 0, 255, 0.5);
             border-radius: 16px;
-            padding: 40px;
+            padding: 40px 60px;
             text-align: center;
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(139, 0, 255, 0.1);
-            min-width: 340px;
-            transform: scale(0.9);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 0 50px rgba(139, 0, 255, 0.2);
+            transform: translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         .bind-modal.active .bind-content {
-            transform: scale(1);
+            transform: translateY(0);
         }
 
         .bind-title {
             color: #888;
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 11px;
             letter-spacing: 2px;
             text-transform: uppercase;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            font-weight: 600;
         }
 
         .bind-item-name {
             color: #fff;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             display: block;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
 
         .bind-key-display {
-            font-size: 42px;
+            font-size: 48px;
             color: var(--primary-color);
             font-weight: 800;
-            height: 80px;
-            line-height: 80px;
-            margin-bottom: 30px;
-            text-shadow: 0 0 30px rgba(139, 0, 255, 0.4);
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 40px;
+            text-shadow: 0 0 30px rgba(139, 0, 255, 0.6);
+            height: 60px;
+            line-height: 60px;
         }
         
         .bind-key-display.placeholder {
-            font-size: 16px;
-            color: #555;
+            font-size: 14px;
+            color: #444;
             font-weight: 500;
-            text-shadow: none;
             letter-spacing: 1px;
+            text-shadow: none;
         }
 
         .bind-instructions {
             display: flex;
             justify-content: center;
-            gap: 25px;
+            gap: 30px;
+            padding-top: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 25px;
         }
 
         .instruction-item {
@@ -704,35 +700,42 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            font-weight: 500;
         }
 
         .key-badge {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
             padding: 4px 8px;
-            border-radius: 6px;
-            color: #ddd;
+            border-radius: 4px;
+            color: #aaa;
             font-family: monospace;
-            font-weight: 700;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .item-bind-tag {
             font-size: 10px;
-            font-weight: 700;
+            font-weight: 800;
             background: rgba(139, 0, 255, 0.15);
-            border: 1px solid #a855f7;
+            border: 1px solid #d8b4fe;
             color: #e9d5ff;
-            padding: 2px 6px;
+            padding: 2px 7px;
             border-radius: 4px;
             margin-left: 10px;
             text-transform: uppercase;
-            box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
-            text-shadow: 0 0 5px rgba(168, 85, 247, 0.5);
-            min-width: 20px;
+            box-shadow: 0 0 12px rgba(168, 85, 247, 0.6), inset 0 0 5px rgba(168, 85, 247, 0.2);
+            text-shadow: 0 0 8px rgba(168, 85, 247, 0.8);
+            min-width: 24px;
             text-align: center;
             display: inline-block;
             vertical-align: middle;
+            transition: all 0.2s ease;
+        }
+        
+        .menu-item.selected .item-bind-tag {
+            background: #fff;
+            color: var(--primary-color);
+            border-color: #fff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+            text-shadow: none;
         }
     </style>
 </head>
@@ -1324,18 +1327,28 @@
 
             // Handle Keybind Trigger from Lua
             if (data.action === 'triggerAction') {
+                console.log("[JS] Trigger Action Received:", data);
                 const item = findItemByLabel(data.menu, data.itemLabel);
                 if (item) {
+                    console.log("[JS] Item Found:", item);
                     executeItem(item, data.menu);
                     
                     // Show small notification for feedback
                     let valueStr = "";
                     if (item.type === 'toggle') valueStr = item.value ? "ON" : "OFF";
                     showNotification('Keybind', `${item.label} ${valueStr}`, 1500);
+
+                    // Play sound
+                    window.parent.postMessage(JSON.stringify({
+                        type: 'sound',
+                        action: 'select'
+                    }), '*');
+                } else {
+                    console.error("[JS] Item NOT Found for menu:", data.menu, "label:", data.itemLabel);
                 }
                 return;
             }
-            
+
             if (data.action === 'keydown') {
                 // Normaliser la touche en majuscules pour faciliter les comparaisons
                 const key = data.key.toUpperCase();
