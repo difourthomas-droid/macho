@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bnz Style Menu</title>
-    <!-- Ajouter FontAwesome pour les icônes -->
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
@@ -27,13 +27,13 @@
             user-select: none;
         }
 
-        /* Container principal positionné en haut à gauche */
+        
         .app-container {
             position: absolute;
-            top: 15%; /* Plus en haut */
-            left: 5%; /* Plus à gauche */
+            top: 15%; 
+            left: 5%; 
             display: none;
-            flex-direction: row; /* Pour mettre la scrollbar à côté du menu */
+            flex-direction: row; 
             gap: 10px;
         }
 
@@ -41,98 +41,83 @@
             display: flex;
         }
 
-        /* Scrollbar externe à gauche */
+        
         .external-scrollbar {
-            width: 18px;
+            width: 12px;
             height: 380px;
-            background: #1a1a1a;
-            border-radius: 9px;
+            background: #000000; /* Fond noir solide */
+            border-radius: 6px;
             position: relative;
             margin-top: 165px;
-            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.8);
-            border: 0.5px solid #0a0a0a;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.8),
+                        0 0 10px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(var(--primary-color-rgb), 0.2);
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 5px 0;
+            padding: 3px 0;
+            overflow: hidden;
         }
 
-        /* Flèche haut */
-        .scroll-arrow-up {
-            width: 0;
-            height: 0;
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-bottom: 8px solid #666;
-            margin-bottom: 5px;
-            cursor: pointer;
-            transition: border-bottom-color 0.2s;
-        }
-
-        .scroll-arrow-up:hover {
-            border-bottom-color: var(--primary-color);
-        }
-
-        /* Flèche bas */
-        .scroll-arrow-down {
-            width: 0;
-            height: 0;
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-top: 8px solid #666;
-            margin-top: 5px;
-            cursor: pointer;
-            transition: border-top-color 0.2s;
-        }
-
-        .scroll-arrow-down:hover {
-            border-top-color: var(--primary-color);
-        }
-
-        /* Track de la scrollbar */
+        
         .scroll-track {
             flex: 1;
-            width: 5px;
-            background: #0a0a0a;
-            border-radius: 2.5px;
-            position: relative;
-            margin: 5px 0;
-        }
-
-        .scroll-thumb {
             width: 100%;
-            background: linear-gradient(180deg, var(--primary-color) 0%, var(--primary-color) 100%);
-            border-radius: 2.5px;
-            position: absolute;
-            left: 0;
-            top: 0;
-            transition: top 0.15s ease;
-            box-shadow: 0 0 10px rgba(var(--primary-color-rgb), 0.8), inset 0 1px 2px rgba(255, 255, 255, 0.4);
-            height: 38px;
+            background: transparent;
+            border-radius: 0;
+            position: relative;
+            margin: 0;
         }
 
-        /* Wrapper du menu entier */
+        
+        .scroll-thumb {
+            width: 6px;
+            margin: 0 auto;
+            background: linear-gradient(180deg, 
+                var(--primary-color) 0%, 
+                rgba(var(--primary-color-rgb), 0.8) 50%,
+                var(--primary-color) 100%);
+            border-radius: 4px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            transition: top 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Plus rapide pour coller au selecteur */
+            box-shadow: 0 0 8px rgba(var(--primary-color-rgb), 0.8);
+            cursor: pointer;
+            border: none;
+        }
+
+        .scroll-thumb:hover {
+            background: linear-gradient(180deg, 
+                rgba(var(--primary-color-rgb), 0.9) 0%, 
+                #fff 50%,
+                rgba(var(--primary-color-rgb), 0.9) 100%);
+            box-shadow: 0 0 15px rgba(var(--primary-color-rgb), 1);
+        }
+
+        
         .menu-wrapper {
-            width: 380px; /* Menu moins large */
+            width: 380px; 
             display: flex;
             flex-direction: column;
-            gap: 12px; /* Espace entre les blocs */
+            gap: 12px; 
         }
 
-        /* Groupe bannière + header fusionnés */
+        
         .banner-header-group {
             display: flex;
             flex-direction: column;
-            border-radius: 4px;
+            border-radius: 3px;
             overflow: hidden;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
         }
 
-        /* Banner styling */
+        
         .menu-banner {
             width: 100%;
             height: 110px;
-            background-image: url('https://i.imgur.com/uYczWv7.png');
+            background-image: url('https://i.imgur.com/x5NYwPM.png');
             background-size: cover;
             background-position: center;
             position: relative;
@@ -152,14 +137,14 @@
             display: none;
         }
 
-        /* Header (Main Menu) */
+        
         .menu-header {
             background: #000000;
             height: 38px;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            border: 1px solid rgba(var(--primary-color-rgb), 0.5);
+            border: none;
             border-top: 2px solid var(--primary-color);
             border-radius: 0 0 4px 4px;
             box-shadow: 0 0 15px rgba(var(--primary-color-rgb), 0.3);
@@ -168,37 +153,53 @@
         }
 
         .header-title {
-            color: #ffffff;
+            color: #fff;
             font-size: 13px;
             font-weight: 500;
             letter-spacing: 0.5px;
+            margin: 0;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .header-icon {
             color: var(--primary-color);
             font-size: 12px;
             font-weight: 600;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
-        /* Content area */
+        .content-footer-group {
+            display: flex;
+            flex-direction: column;
+            border-radius: 4px;
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.9),
+                        0 0 40px rgba(var(--primary-color-rgb), 0.05);
+        }
+
         .content-wrapper {
             background: linear-gradient(135deg, 
-                rgba(20, 20, 20, 0.95) 0%, 
-                rgba(10, 10, 10, 0.98) 50%,
-                rgba(15, 15, 15, 0.95) 100%);
+                rgba(5, 5, 5, 0.98) 0%, 
+                rgba(0, 0, 0, 0.99) 50%,
+                rgba(3, 3, 3, 0.98) 100%);
             position: relative;
-            border: 1px solid rgba(var(--primary-color-rgb), 0.15);
-            border-radius: 6px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.9),
-                        0 0 40px rgba(var(--primary-color-rgb), 0.05),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             backdrop-filter: blur(15px);
         }
 
-        /* Tabs Styling */
+        
         .tabs-container {
             display: none;
             background: rgba(15, 15, 20, 0.9);
@@ -206,8 +207,8 @@
             padding: 10px 15px;
             gap: 15px;
             justify-content: center;
-            flex-shrink: 0; /* Empêche le conteneur de se faire écraser */
-            overflow: hidden; /* Supprime toute scrollbar native */
+            flex-shrink: 0; 
+            overflow: hidden; 
             z-index: 10;
         }
 
@@ -217,11 +218,11 @@
 
         .tab-item {
             padding: 6px 16px;
-            color: #ddd; /* Texte plus clair pour les onglets inactifs */
+            color: #ddd; 
             font-size: 13px;
             font-weight: 600;
             border-radius: 6px;
-            background: rgba(255, 255, 255, 0.1); /* Fond inactif plus visible */
+            background: rgba(255, 255, 255, 0.1); 
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -243,7 +244,7 @@
             overflow: visible;
         }
 
-        /* Menu Items */
+        
         .menu-item {
             padding: 10px 15px;
             display: flex;
@@ -258,7 +259,7 @@
         }
 
         .item-label {
-            color: #d0d0d0;
+            color: #f0f0f0;
             font-size: 14px;
             font-weight: 400;
             z-index: 2;
@@ -268,42 +269,29 @@
         }
 
         .item-left-icon {
-            font-size: 14px;
-            width: 16px;
-            text-align: center;
-            color: #888;
-        }
-
-        .menu-item.selected .item-left-icon {
-            color: #888;
-        }
-
-        .item-icon {
-            color: #888;
+            color: #f0f0f0;
             font-size: 16px;
             font-weight: 700;
             z-index: 2;
         }
 
+        .item-icon {
+            color: #f0f0f0;
+            font-size: 16px;
+            font-weight: 700;
+            z-index: 2;
+        }
+
+        .menu-item.selected .item-left-icon {
+            color: #f0f0f0;
+        }
+
         .menu-item.selected .item-icon {
-            color: #888;
+            color: #f0f0f0;
         }
 
-        /* Selected item gradient effect violet */
+        
         .menu-item.selected {
-            background: var(--primary-color);
-            box-shadow: 0 4px 12px rgba(var(--primary-color-rgb), 0.5), 
-                        0 0 20px rgba(var(--primary-color-rgb), 0.2),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.15),
-                        inset 0 -1px 0 rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(var(--primary-color-rgb), 0.6);
-            position: relative;
-        }
-
-        /* Styles spécifiques pour éviter que le sélecteur ne passe sous les contrôles */
-        .menu-item.selected.item-type-slider,
-        .menu-item.selected.item-type-toggle,
-        .menu-item.selected.item-type-color {
             background: linear-gradient(90deg, 
                 var(--primary-color) 0%, 
                 var(--primary-color) 60%, 
@@ -311,9 +299,17 @@
             border-right: none;
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15),
                         inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(var(--primary-color-rgb), 0.6);
+            position: relative;
         }
 
-        /* Barre brillante à gauche */
+        .menu-item.selected .item-label,
+        .menu-item.selected .item-icon {
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        
         .menu-item.selected::before {
             content: '';
             position: absolute;
@@ -329,13 +325,7 @@
             border-radius: 0 2px 2px 0;
         }
 
-        .menu-item.selected .item-label,
-        .menu-item.selected .item-icon {
-            color: #ffffff;
-            font-weight: 500;
-        }
-
-        /* Centered Divider */
+        
         .divider {
             display: flex;
             align-items: center;
@@ -357,7 +347,7 @@
             text-transform: lowercase;
         }
 
-        /* iOS style toggles */
+        
         .toggle-container {
             width: 40px;
             height: 20px;
@@ -370,7 +360,7 @@
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        /* Slider styling - Design Arrondi, Visible & Contrasté */
+        
         .slider-container {
             width: 145px;
             height: 24px;
@@ -382,8 +372,8 @@
 
         .slider {
             width: 95px;
-            height: 6px; /* Plus épais pour être visible */
-            background: rgba(255, 255, 255, 0.15); /* Fond gris clair */
+            height: 6px; 
+            background: rgba(255, 255, 255, 0.15); 
             border-radius: 3px;
             position: relative;
             cursor: pointer;
@@ -392,7 +382,7 @@
             transition: all 0.3s ease;
         }
         
-        /* Nettoyage des anciens styles */
+        
         .slider::before, .slider::after { content: none; }
 
         .slider-track {
@@ -411,9 +401,9 @@
         .slider-thumb {
             width: 14px;
             height: 14px;
-            background: #fff; /* Blanc pour contraster */
+            background: #fff; 
             border: none;
-            border-radius: 50%; /* Rond */
+            border-radius: 50%; 
             position: absolute;
             top: 50%;
             transform: translate(-50%, -50%) scale(1);
@@ -425,22 +415,22 @@
 
         .slider-thumb::before { content: none; }
 
-        /* Styles spécifiques quand l'option est sélectionnée */
-        /* Fond de la track devient un peu plus foncé */
+        
+        
         .menu-item.selected .slider {
             background: rgba(0, 0, 0, 0.4); 
         }
 
-        /* La barre de progression utilise la couleur du menu assombrie */
+        
         .menu-item.selected .slider-track {
             background: var(--primary-color);
             filter: brightness(0.6);
             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
         }
 
-        /* Le curseur grossit et brille */
+        
         .menu-item.selected .slider-thumb {
-            transform: translate(-50%, -50%) scale(1.3); /* Grossissement */
+            transform: translate(-50%, -50%) scale(1.3); 
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
         }
 
@@ -459,7 +449,7 @@
             text-shadow: 0 0 5px rgba(0,0,0,0.5);
         }
 
-        /* Color picker - Design rond et plus esthétique */
+        
         .color-picker {
             width: 24px;
             height: 24px;
@@ -515,32 +505,55 @@
             box-shadow: 0 2px 8px rgba(var(--primary-color-rgb), 0.6);
         }
 
-        /* Footer plus grand */
         .menu-footer {
-            height: 35px; /* Agrandissement de la hauteur */
+            height: 35px;
             background: #000000;
-            border: 1px solid #111;
-            border-radius: 6px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+            border-top: 1px solid var(--primary-color);
+            border-radius: 0;
+            box-shadow: none;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 15px;
+            padding: 0 14px;
+            position: relative;
         }
 
         .footer-text {
-            color: #e0e0e0; /* Texte plus clair */
-            font-size: 12px; /* Police plus grande */
+            color: #e0e0e0; 
+            font-size: 12px; 
             font-weight: 500;
+            z-index: 1;
         }
 
         .footer-counter {
             color: #e0e0e0;
             font-size: 12px;
             font-weight: 500;
+            z-index: 1;
         }
 
-        /* Notifications */
+        .footer-logo {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-logo img {
+            height: 40px;
+            width: auto;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-logo img:hover {
+            opacity: 1;
+        }
+
+        
         .notification-container {
             position: absolute;
             top: 20px;
@@ -613,7 +626,7 @@
             box-shadow: 0 0 5px var(--primary-color);
         }
 
-        /* Keybind Modal - Confirmation Style */
+        
         .bind-modal {
             position: fixed;
             top: 0;
@@ -669,7 +682,7 @@
             display: block;
         }
 
-        /* Input-like display */
+        
         .bind-key-display {
             font-size: 14px;
             color: #fff;
@@ -698,7 +711,7 @@
             50% { opacity: 0; }
         }
 
-        /* Active state for input look */
+        
         .bind-key-display:not(.placeholder) {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 1px rgba(139, 0, 255, 0.3);
@@ -783,13 +796,11 @@
     </div>
     <div class="notification-container" id="notificationContainer"></div>
     <div class="app-container active" id="appContainer">
-        <!-- Scrollbar externe gauche -->
+        
         <div class="external-scrollbar">
-            <div class="scroll-arrow-up" onclick="scrollUp()"></div>
             <div class="scroll-track">
                 <div class="scroll-thumb" id="scrollThumb"></div>
             </div>
-            <div class="scroll-arrow-down" onclick="scrollDown()"></div>
         </div>
 
         <div class="menu-wrapper">
@@ -804,34 +815,37 @@
                 </div>
             </div>
 
-            <div class="content-wrapper">
-                <div class="tabs-container" id="tabsContainer">
-                    <!-- Tabs injected here -->
+            <div class="content-footer-group">
+                <div class="content-wrapper">
+                    <div class="tabs-container" id="tabsContainer">
+                    </div>
+                    <div class="menu-list" id="menuList">
+                    </div>
                 </div>
-                <div class="menu-list" id="menuList">
-                    <!-- Items injected here -->
-                </div>
-            </div>
 
-            <div class="menu-footer">
-                <div class="footer-text">chpa</div>
-                <div class="footer-counter" id="footerCounter">1/1</div>
+                <div class="menu-footer">
+                    <div class="footer-text">Synaps</div>
+                    <div class="footer-logo">
+                        <img src="https://i.imgur.com/t2Ub2iv.png" alt="Logo" />
+                    </div>
+                    <div class="footer-counter" id="footerCounter">1/1</div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Menu Data Structure with Submenus
+
         const menuData = {
             id: "main",
             name: "Main Menu",
             items: [
                 { type: "submenu", label: "Player", target: "player", icon: "fa-solid fa-user" },
-                { type: "submenu", label: "Online", target: "online", icon: "fa-solid fa-globe" },
-                { type: "submenu", label: "Visual", target: "visual", icon: "fa-solid fa-eye" },
-                { type: "submenu", label: "Combat", target: "combat", icon: "fa-solid fa-crosshairs" },
+                { type: "submenu", label: "Online", target: "online", icon: "fa-solid fa-wifi" },
+                { type: "submenu", label: "Weapon", target: "combat", icon: "fa-solid fa-gun" },
                 { type: "submenu", label: "Vehicle", target: "vehicle", icon: "fa-solid fa-car" },
-                { type: "submenu", label: "Miscellaneous", target: "misc", icon: "fa-solid fa-bars" },
+                { type: "submenu", label: "Server", target: "server", icon: "fa-solid fa-server" },
+                { type: "submenu", label: "Miscellaneous", target: "misc", icon: "fa-solid fa-cube" },
                 { type: "submenu", label: "Settings", target: "settings", icon: "fa-solid fa-gear" }
             ]
         };
@@ -924,7 +938,7 @@
             }
         };
 
-        // Navigation state
+
         let menuHistory = [menuData]; // Stack of current menu path
         let currentIndex = 0;
         let activeTabIndex = 0; // Current active tab index
@@ -932,13 +946,13 @@
         let editorMode = false;
         const visibleItemCount = 7;
         
-        // Keybind system
+
         let isBinding = false;
         let bindingItem = null;
         let pendingBindKey = null; // Key waiting for confirmation
         let keybinds = {}; // Format: { "menuId-itemLabel": "KEY_NAME" }
 
-        // Dragging state
+
         const appContainer = document.getElementById('appContainer');
         let isDragging = false;
         let dragStartX = 0;
@@ -997,7 +1011,46 @@
         }
 
         function initMenu() {
-            document.getElementById('headerTitle').textContent = getCurrentMenu().name;
+
+            const headerTitle = document.getElementById('headerTitle');
+            const menuHeader = document.querySelector('.menu-header');
+            headerTitle.innerHTML = '';
+            
+
+            const leftContainer = document.createElement('div');
+            leftContainer.style.cssText = `
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            `;
+            
+
+            const currentMenu = getCurrentMenu();
+            const menuContainer = document.createElement('div');
+            menuContainer.style.cssText = `
+                display: inline-block;
+                color: #fff;
+                font-size: 13px;
+                font-weight: 500;
+                letter-spacing: 0.5px;
+                background: rgba(var(--primary-color-rgb), 0.2);
+                border: 1px solid rgba(var(--primary-color-rgb), 0.5);
+                padding: 2px 8px;
+                border-radius: 4px;
+                box-shadow: 0 0 15px rgba(var(--primary-color-rgb), 0.3);
+                vertical-align: middle;
+            `;
+            menuContainer.textContent = currentMenu.name;
+            leftContainer.appendChild(menuContainer);
+            
+            headerTitle.appendChild(leftContainer);
+            
+
+            menuHeader.style.justifyContent = 'space-between';
+            headerTitle.style.justifyContent = 'flex-start';
+            headerTitle.style.alignItems = 'center';
+            headerTitle.style.width = '100%';
+            
             updateIndex();
             renderTabs();
             renderList();
@@ -1009,7 +1062,7 @@
                 currentIndex = Math.max(0, items.length - 1);
             }
             
-            // Skip dividers
+
             if (items.length > 0 && items[currentIndex].type === 'divider') {
                 navigateNext();
             }
@@ -1040,21 +1093,24 @@
             const startIdx = getScrollWindow();
             const endIdx = Math.min(startIdx + visibleItemCount, items.length);
             
-            // Ajuster la hauteur du content-wrapper selon le nombre d'items visibles
+
             const itemCount = Math.min(items.length, visibleItemCount);
             const itemHeight = 38;
-            const paddingTop = 12;
-            const paddingBottom = 20;
+            const currentMenu = getCurrentMenu();
             
-            // Add tab container height to calculation if present
+
+            const paddingTop = currentMenu.id === "main" ? 12 : 12;
+            const paddingBottom = currentMenu.id === "main" ? 20 : 10;
+            
+
             const tabsContainer = document.getElementById('tabsContainer');
-            // Utiliser la vraie hauteur du conteneur d'onglets au lieu d'une valeur fixe
+
             const tabsHeight = getCurrentMenu().tabs ? tabsContainer.offsetHeight || 45 : 0; 
             
             const contentHeight = (itemCount * itemHeight) + paddingTop + paddingBottom + tabsHeight;
             document.querySelector('.content-wrapper').style.height = contentHeight + 'px';
             
-            // Ajuster la scrollbar pour qu'elle suive le menu
+
             const scrollbarContainer = document.querySelector('.external-scrollbar');
             scrollbarContainer.style.height = contentHeight + 'px';
             scrollbarContainer.style.marginTop = '165px';
@@ -1080,18 +1136,18 @@
                 const label = document.createElement('div');
                 label.className = 'item-label';
                 
-                // Add left icon if it exists
+
                 if (item.icon) {
                     const leftIcon = document.createElement('i');
                     leftIcon.className = `${item.icon} item-left-icon`;
                     label.appendChild(leftIcon);
                 }
                 
-                // Add the text
+
                 const textNode = document.createTextNode(item.label);
                 label.appendChild(textNode);
                 
-                // Add bind tag if exists
+
                 const bindKey = getBindKey(getCurrentMenu().id, item.label);
                 if (bindKey) {
                     const bindTag = document.createElement('span');
@@ -1115,7 +1171,7 @@
                     colorPicker.addEventListener('change', (e) => {
                         item.value = e.target.value;
                         updateMenuColor(e.target.value);
-                        // Envoyer au Lua
+
                         window.parent.postMessage(JSON.stringify({
                             type: 'colorChange',
                             color: e.target.value
@@ -1139,7 +1195,7 @@
                     sliderValue.className = 'slider-value';
                     sliderValue.textContent = item.value.toFixed(1);
                     
-                    // Calculate thumb position based on value
+
                     const percentage = ((item.value - item.min) / (item.max - item.min)) * 100;
                     sliderThumb.style.left = `${percentage}%`;
                     sliderTrack.style.width = `${percentage}%`;
@@ -1152,7 +1208,7 @@
                 } else if (item.type === 'submenu') {
                     const icon = document.createElement('div');
                     icon.className = 'item-icon';
-                    icon.textContent = '›';
+                    icon.textContent = '➭';
                     div.appendChild(icon);
                 }
                 
@@ -1167,30 +1223,52 @@
             const thumb = document.getElementById('scrollThumb');
             const track = document.querySelector('.scroll-track');
             
-            if (!track) return;
+            if (!track || !thumb) return;
             
             const trackHeight = track.offsetHeight;
             const itemHeight = 38;
             
+            // La barre de scroll représente la taille de 2 cases
+            const thumbHeight = itemHeight * 2;
+            
             if (totalLength <= visibleItemCount) {
-                // Si tous les items sont visibles, positionner le thumb selon l'index actuel
-                const thumbTop = (currentIndex / Math.max(1, totalLength - 1)) * (trackHeight - itemHeight);
+                // Si tous les items sont visibles, le thumb suit la position exacte du sélecteur
+                // On s'assure qu'il ne dépasse pas vers le bas
+                const maxThumbTop = trackHeight - thumbHeight;
+                const thumbTop = Math.min(currentIndex * itemHeight, maxThumbTop);
+                
                 thumb.style.top = `${thumbTop}px`;
+                thumb.style.height = `${thumbHeight}px`;
+                thumb.style.opacity = '1';
                 return;
             }
             
-            // Le thumb suit la position exacte du sélecteur
-            const thumbTop = (currentIndex / (totalLength - 1)) * (trackHeight - itemHeight);
-            thumb.style.top = `${Math.max(0, Math.min(thumbTop, trackHeight - itemHeight))}px`;
+            // Si on scrolle, le thumb suit la position relative du sélecteur dans la fenêtre visible
+            // currentIndex - startIdx = la position visuelle du sélecteur à l'écran (de 0 à visibleItemCount-1)
+            const visibleIndex = currentIndex - startIdx;
+            
+            // On s'assure qu'il ne dépasse pas vers le bas
+            const maxThumbTop = trackHeight - thumbHeight;
+            const thumbTop = Math.min(visibleIndex * itemHeight, maxThumbTop);
+            
+            thumb.style.top = `${thumbTop}px`;
+            thumb.style.height = `${thumbHeight}px`;
+            thumb.style.opacity = '1';
+            
+            // Effet visuel quand ça bouge
+            thumb.style.boxShadow = '0 0 15px rgba(var(--primary-color-rgb), 1)';
+            setTimeout(() => {
+                if (thumb) thumb.style.boxShadow = '0 0 8px rgba(var(--primary-color-rgb), 0.8)';
+            }, 100);
         }
 
         function updateMenuColor(hexColor) {
-            // Convertir hex en RGB
+
             const r = parseInt(hexColor.slice(1, 3), 16);
             const g = parseInt(hexColor.slice(3, 5), 16);
             const b = parseInt(hexColor.slice(5, 7), 16);
             
-            // Mettre à jour les variables CSS
+
             document.documentElement.style.setProperty('--primary-color', hexColor);
             document.documentElement.style.setProperty('--primary-color-rgb', `${r}, ${g}, ${b}`);
         }
@@ -1263,7 +1341,7 @@
                 if (oldValue !== item.value) {
                     renderList();
                     
-                    // Envoyer au Lua
+
                     window.parent.postMessage(JSON.stringify({
                         type: 'sliderChange',
                         label: item.label,
@@ -1290,7 +1368,7 @@
         function executeItem(item, menuId) {
             if (!item) return;
 
-            // Client-side logic
+
             if (item.label === 'notif') {
                 showNotification('Notification System', 'Bnz', 4000);
             }
@@ -1311,12 +1389,12 @@
                     editorMode = item.value;
                     appContainer.style.cursor = editorMode ? 'grab' : 'default';
                 }
-                // Update UI if we are looking at this item
+
                 renderList();
             }
             
-            // Send to Lua
-            // Use menuId provided or default to current if not passed (though should always be passed for robustness)
+
+
             const currentMenuId = menuId || getCurrentMenu().id;
             
             window.parent.postMessage(JSON.stringify({
@@ -1348,7 +1426,7 @@
                 }
             }
 
-            // Handle Keybind Trigger from Lua
+
             if (data.action === 'triggerAction') {
                 console.log("[JS] Trigger Action Received:", data);
                 const item = findItemByLabel(data.menu, data.itemLabel);
@@ -1356,12 +1434,12 @@
                     console.log("[JS] Item Found:", item);
                     executeItem(item, data.menu);
                     
-                    // Show small notification for feedback
+
                     let valueStr = "";
                     if (item.type === 'toggle') valueStr = item.value ? "ON" : "OFF";
                     showNotification('Keybind', `${item.label} ${valueStr}`, 1500);
 
-                    // Play sound
+
                     window.parent.postMessage(JSON.stringify({
                         type: 'sound',
                         action: 'select'
@@ -1373,10 +1451,10 @@
             }
 
             if (data.action === 'keydown') {
-                // Normaliser la touche en majuscules pour faciliter les comparaisons
+
                 const key = data.key.toUpperCase();
 
-                // Binding Logic via Lua Keys
+
                 if (isBinding) {
                     if (key === 'F9') return; // Ignore F9 trigger
 
@@ -1390,7 +1468,7 @@
                         return;
                     }
                     
-                    // Capture key (store as received from Lua for consistency)
+
                     pendingBindKey = data.key; 
                     updateBindDisplay(data.key);
                     return;
@@ -1472,7 +1550,7 @@
             const key = bindingItem.menuId + '-' + bindingItem.label;
             const luaKeyName = pendingBindKey;
             
-            // Toggle bind (remove if same key, update if new)
+
             if (keybinds[key] === luaKeyName) {
                 delete keybinds[key];
                 showNotification('Keybind', `Unbound ${bindingItem.label}`, 2000);
@@ -1481,7 +1559,7 @@
                 showNotification('Keybind', `Bound ${bindingItem.label} to ${luaKeyName}`, 2000);
             }
             
-            // Send to Lua
+
             window.parent.postMessage(JSON.stringify({
                 type: 'updateBinds',
                 binds: keybinds
@@ -1491,15 +1569,15 @@
             renderList();
         }
 
-        // Helper to find item deeply with stricter menuId check
+
         function findItemByLabel(menuId, label) {
-            // Check main menu
+
             if (menuData.id === menuId) {
                 const found = menuData.items.find(i => i.label === label);
                 if (found) return found;
             }
 
-            // Check specific submenu if ID matches
+
             if (submenus[menuId]) {
                 const submenu = submenus[menuId];
                 if (submenu.items) {
@@ -1515,15 +1593,15 @@
                 return null;
             }
 
-            // Fallback: Check all submenus (legacy behavior, or if menuId is unknown)
+
             for (const key in submenus) {
                 const submenu = submenus[key];
-                // Check items in submenu
+
                 if (submenu.items) {
                      const found = submenu.items.find(i => i.label === label);
                      if (found) return found;
                 }
-                // Check tabs
+
                 if (submenu.tabs) {
                     for (const tab of submenu.tabs) {
                         const found = tab.items.find(i => i.label === label);
@@ -1534,9 +1612,9 @@
             return null;
         }
 
-        // Map JS KeyCodes to FiveM/Lua friendly names if needed
+
         function getKeyName(event) {
-            // Simplified mapping, can be expanded
+
             if (event.code.startsWith('Key')) return event.code.replace('Key', '');
             if (event.code.startsWith('Digit')) return event.code.replace('Digit', '');
             if (event.code.startsWith('F')) return event.code;
@@ -1544,7 +1622,7 @@
             return event.key.toUpperCase();
         }
 
-        // Navigation clavier directe pour utilisation web
+
         document.addEventListener('keydown', function(event) {
             if (isBinding) {
                 event.preventDefault();
@@ -1562,7 +1640,7 @@
                     return;
                 }
                 
-                // Capture key
+
                 const keyName = getKeyName(event);
                 pendingBindKey = keyName;
                 updateBindDisplay(keyName);
@@ -1629,22 +1707,22 @@
             
             container.appendChild(notif);
             
-            // Force reflow
+
             notif.offsetHeight;
             
-            // Animate In
+
             notif.classList.add('show');
             
-            // Animate Progress Bar
+
             const progress = notif.querySelector('.notification-progress');
             progress.style.transition = `width ${duration}ms linear`;
             
-            // Start progress animation shortly after show
+
             setTimeout(() => {
                 progress.style.width = '0%';
             }, 50);
 
-            // Remove logic
+
             setTimeout(() => {
                 notif.classList.remove('show');
                 setTimeout(() => {
