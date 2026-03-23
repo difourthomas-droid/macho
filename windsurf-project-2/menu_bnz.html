@@ -4,8 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bnz Style Menu</title>
+    <!-- Ajouter FontAwesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        :root {
+            --primary-color: #8b00ff;
+            --primary-color-rgb: 139, 0, 255;
+        }
 
         * {
             margin: 0;
@@ -36,25 +43,72 @@
 
         /* Scrollbar externe à gauche */
         .external-scrollbar {
-            width: 8px;
-            height: 380px; /* Aligné avec la hauteur du contenu du menu */
-            background: #222;
-            border-radius: 4px;
+            width: 18px;
+            height: 380px;
+            background: #1a1a1a;
+            border-radius: 9px;
             position: relative;
-            margin-top: 165px; /* Décalage pour s'aligner sous la bannière et le header */
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.8), inset 0 0 2px rgba(0,0,0,0.5);
-            border: 1px solid #111;
+            margin-top: 165px;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.8);
+            border: 0.5px solid #0a0a0a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px 0;
+        }
+
+        /* Flèche haut */
+        .scroll-arrow-up {
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 8px solid #666;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: border-bottom-color 0.2s;
+        }
+
+        .scroll-arrow-up:hover {
+            border-bottom-color: var(--primary-color);
+        }
+
+        /* Flèche bas */
+        .scroll-arrow-down {
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 8px solid #666;
+            margin-top: 5px;
+            cursor: pointer;
+            transition: border-top-color 0.2s;
+        }
+
+        .scroll-arrow-down:hover {
+            border-top-color: var(--primary-color);
+        }
+
+        /* Track de la scrollbar */
+        .scroll-track {
+            flex: 1;
+            width: 5px;
+            background: #0a0a0a;
+            border-radius: 2.5px;
+            position: relative;
+            margin: 5px 0;
         }
 
         .scroll-thumb {
             width: 100%;
-            background: #8b00ff; /* Violet Bnz */
-            border-radius: 4px;
+            background: linear-gradient(180deg, var(--primary-color) 0%, var(--primary-color) 100%);
+            border-radius: 2.5px;
             position: absolute;
             left: 0;
             top: 0;
-            transition: top 0.1s ease;
-            box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.3);
+            transition: top 0.15s ease;
+            box-shadow: 0 0 10px rgba(var(--primary-color-rgb), 0.8), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+            height: 38px;
         }
 
         /* Wrapper du menu entier */
@@ -62,81 +116,131 @@
             width: 380px; /* Menu moins large */
             display: flex;
             flex-direction: column;
-            gap: 8px; /* Espace réduit entre les blocs */
+            gap: 12px; /* Espace entre les blocs */
+        }
+
+        /* Groupe bannière + header fusionnés */
+        .banner-header-group {
+            display: flex;
+            flex-direction: column;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
         }
 
         /* Banner styling */
         .menu-banner {
             width: 100%;
-            height: 120px;
-            background-image: url('https://i.postimg.cc/zGNZg9C1/banner-bnz.jpg');
+            height: 110px;
+            background-image: url('https://i.imgur.com/uYczWv7.png');
             background-size: cover;
             background-position: center;
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
-            border: 1px solid #111;
+            border: none;
+            border-radius: 0;
+            overflow: hidden;
         }
 
         .menu-banner::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(139, 0, 255, 0.4) 0%, rgba(10, 10, 10, 0.8) 100%); /* Teinte violette */
-            z-index: 1;
+            display: none;
         }
 
         .banner-text {
-            position: relative;
-            z-index: 2;
-            color: #ffffff;
-            font-size: 56px;
-            font-weight: 700;
-            font-style: italic;
-            text-shadow: 0 0 15px rgba(139, 0, 255, 0.8), 2px 2px 4px rgba(0,0,0,0.8);
-            letter-spacing: 2px;
-            font-family: 'Brush Script MT', cursive, sans-serif;
+            display: none;
         }
 
         /* Header (Main Menu) */
         .menu-header {
             background: #000000;
-            height: 35px;
+            height: 38px;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            border: 1px solid #111;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(var(--primary-color-rgb), 0.5);
+            border-top: 2px solid var(--primary-color);
+            border-radius: 0 0 4px 4px;
+            box-shadow: 0 0 15px rgba(var(--primary-color-rgb), 0.3);
+            padding: 0 15px;
+            position: relative;
         }
 
         .header-title {
             color: #ffffff;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
             letter-spacing: 0.5px;
         }
 
+        .header-icon {
+            color: var(--primary-color);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
         /* Content area */
         .content-wrapper {
-            height: 380px;
-            background: #0a0a0a;
+            background: linear-gradient(135deg, 
+                rgba(20, 20, 20, 0.95) 0%, 
+                rgba(10, 10, 10, 0.98) 50%,
+                rgba(15, 15, 15, 0.95) 100%);
             position: relative;
-            border: 1px solid #111;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(var(--primary-color-rgb), 0.15);
+            border-radius: 6px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.9),
+                        0 0 40px rgba(var(--primary-color-rgb), 0.05),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.08);
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            backdrop-filter: blur(15px);
+        }
+
+        /* Tabs Styling */
+        .tabs-container {
+            display: none;
+            background: rgba(20, 20, 25, 0.9);
+            border-bottom: 1px solid rgba(var(--primary-color-rgb), 0.3);
+            padding: 10px 15px;
+            gap: 15px;
+            justify-content: center;
+            flex-shrink: 0; /* Empêche le conteneur de se faire écraser */
+            overflow: hidden; /* Supprime toute scrollbar native */
+            z-index: 10;
+        }
+
+        .tabs-container.active {
+            display: flex;
+        }
+
+        .tab-item {
+            padding: 6px 16px;
+            color: #ddd; /* Texte plus clair pour les onglets inactifs */
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.1); /* Fond inactif plus visible */
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .tab-item.active {
+            color: #fff;
+            background: rgba(var(--primary-color-rgb), 0.2);
+            box-shadow: 0 0 15px rgba(var(--primary-color-rgb), 0.3);
+            border: 1px solid rgba(var(--primary-color-rgb), 0.5);
         }
 
         .menu-list {
             flex: 1;
-            padding: 2px 0;
+            padding: 12px 0 20px 0;
             position: relative;
+            overflow: visible;
         }
 
         /* Menu Items */
@@ -146,7 +250,11 @@
             justify-content: space-between;
             align-items: center;
             position: relative;
-            height: 38px; /* Hauteur ajustée */
+            height: 38px;
+            margin: 2px 4px;
+            border-radius: 4px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent;
         }
 
         .item-label {
@@ -154,18 +262,58 @@
             font-size: 14px;
             font-weight: 400;
             z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .item-left-icon {
+            font-size: 14px;
+            width: 16px;
+            text-align: center;
+            color: #888;
+        }
+
+        .menu-item.selected .item-left-icon {
+            color: #888;
         }
 
         .item-icon {
             color: #888;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 700;
             z-index: 2;
         }
 
+        .menu-item.selected .item-icon {
+            color: #888;
+        }
+
         /* Selected item gradient effect violet */
         .menu-item.selected {
-            background: linear-gradient(90deg, #6600cc 0%, #400080 100%);
+            background: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(var(--primary-color-rgb), 0.5), 
+                        0 0 20px rgba(var(--primary-color-rgb), 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(var(--primary-color-rgb), 0.6);
+            position: relative;
+        }
+
+        /* Barre brillante à gauche */
+        .menu-item.selected::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, 
+                rgba(255, 255, 255, 0.3) 0%, 
+                var(--primary-color) 50%, 
+                rgba(255, 255, 255, 0.3) 100%);
+            box-shadow: 0 0 8px rgba(var(--primary-color-rgb), 0.8);
+            border-radius: 0 2px 2px 0;
         }
 
         .menu-item.selected .item-label,
@@ -207,8 +355,24 @@
             transition: background 0.3s;
         }
 
+        /* Color picker */
+        .color-picker {
+            width: 32px;
+            height: 18px;
+            border-radius: 4px;
+            border: 1px solid #555;
+            cursor: pointer;
+            z-index: 2;
+            transition: all 0.3s;
+        }
+
+        .color-picker:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 8px rgba(var(--primary-color-rgb), 0.5);
+        }
+
         .toggle-container.active {
-            background: #8b00ff; /* Violet actif */
+            background: var(--primary-color);
         }
 
         .toggle-thumb {
@@ -231,8 +395,8 @@
         .menu-footer {
             height: 35px; /* Agrandissement de la hauteur */
             background: #000000;
-            border-radius: 4px;
             border: 1px solid #111;
+            border-radius: 6px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
             display: flex;
             justify-content: space-between;
@@ -254,29 +418,39 @@
     </style>
 </head>
 <body>
-    <div class="app-container" id="appContainer">
+    <div class="app-container active" id="appContainer">
         <!-- Scrollbar externe gauche -->
         <div class="external-scrollbar">
-            <div class="scroll-thumb" id="scrollThumb"></div>
+            <div class="scroll-arrow-up" onclick="scrollUp()"></div>
+            <div class="scroll-track">
+                <div class="scroll-thumb" id="scrollThumb"></div>
+            </div>
+            <div class="scroll-arrow-down" onclick="scrollDown()"></div>
         </div>
 
         <div class="menu-wrapper">
-            <div class="menu-banner">
-                <div class="banner-text">Bnz'</div>
-            </div>
+            <div class="banner-header-group">
+                <div class="menu-banner">
+                    <div class="banner-text">Bnz'</div>
+                </div>
 
-            <div class="menu-header">
-                <span class="header-title" id="headerTitle">Main Menu</span>
+                <div class="menu-header">
+                    <span class="header-title" id="headerTitle">Main Menu</span>
+                    <span class="header-icon">◆</span>
+                </div>
             </div>
 
             <div class="content-wrapper">
+                <div class="tabs-container" id="tabsContainer">
+                    <!-- Tabs injected here -->
+                </div>
                 <div class="menu-list" id="menuList">
                     <!-- Items injected here -->
                 </div>
             </div>
 
             <div class="menu-footer">
-                <div class="footer-text">Made By Bnz' | .gg/BftTJpnghy</div>
+                <div class="footer-text">chpa</div>
                 <div class="footer-counter" id="footerCounter">1/1</div>
             </div>
         </div>
@@ -288,24 +462,47 @@
             id: "main",
             name: "Main Menu",
             items: [
-                { type: "submenu", label: "Player", target: "player" },
-                { type: "submenu", label: "Online", target: "online" },
-                { type: "submenu", label: "Visual", target: "visual" },
-                { type: "submenu", label: "Combat", target: "combat" },
-                { type: "submenu", label: "Vehicle", target: "vehicle" },
-                { type: "submenu", label: "Miscellaneous", target: "misc" },
-                { type: "submenu", label: "Settings", target: "settings" }
+                { type: "submenu", label: "Player", target: "player", icon: "fa-solid fa-user" },
+                { type: "submenu", label: "Online", target: "online", icon: "fa-solid fa-globe" },
+                { type: "submenu", label: "Visual", target: "visual", icon: "fa-solid fa-eye" },
+                { type: "submenu", label: "Combat", target: "combat", icon: "fa-solid fa-crosshairs" },
+                { type: "submenu", label: "Vehicle", target: "vehicle", icon: "fa-solid fa-car" },
+                { type: "submenu", label: "Miscellaneous", target: "misc", icon: "fa-solid fa-bars" },
+                { type: "submenu", label: "Settings", target: "settings", icon: "fa-solid fa-gear" }
             ]
         };
 
         const submenus = {
             "player": {
                 name: "Player",
-                items: [
-                    { type: "button", label: "Heal" },
-                    { type: "button", label: "Armor" },
-                    { type: "toggle", label: "Godmode", value: false },
-                    { type: "toggle", label: "Noclip", value: false }
+                tabs: [
+                    {
+                        id: "self",
+                        name: "Self",
+                        items: [
+                            { type: "button", label: "Heal" },
+                            { type: "button", label: "Armor" },
+                            { type: "toggle", label: "Godmode", value: false },
+                            { type: "toggle", label: "Noclip", value: false }
+                        ]
+                    },
+                    {
+                        id: "movement",
+                        name: "Movement",
+                        items: [
+                            { type: "toggle", label: "Super Run", value: false },
+                            { type: "toggle", label: "Super Jump", value: false }
+                        ]
+                    },
+                    {
+                        id: "wardrobe",
+                        name: "Wardrobe",
+                        items: [
+                            { type: "button", label: "Save Outfit" },
+                            { type: "button", label: "Load Outfit" },
+                            { type: "button", label: "Random Outfit" }
+                        ]
+                    }
                 ]
             },
             "online": {
@@ -349,7 +546,9 @@
                 name: "Settings",
                 items: [
                     { type: "button", label: "Save Config" },
-                    { type: "button", label: "Load Config" }
+                    { type: "button", label: "Load Config" },
+                    { type: "color", label: "Change Color", value: "#8b00ff" },
+                    { type: "toggle", label: "Editor Mod", value: false }
                 ]
             }
         };
@@ -357,20 +556,73 @@
         // Navigation state
         let menuHistory = [menuData]; // Stack of current menu path
         let currentIndex = 0;
-        let menuVisible = false;
-        const visibleItemCount = 10;
+        let activeTabIndex = 0; // Current active tab index
+        let menuVisible = true;
+        let editorMode = false;
+        const visibleItemCount = 7;
+
+        // Dragging state
+        const appContainer = document.getElementById('appContainer');
+        let isDragging = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+
+        appContainer.addEventListener('mousedown', (e) => {
+            if (!editorMode) return;
+            isDragging = true;
+            dragStartX = e.clientX - appContainer.offsetLeft;
+            dragStartY = e.clientY - appContainer.offsetTop;
+            appContainer.style.cursor = 'grabbing';
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging || !editorMode) return;
+            appContainer.style.left = (e.clientX - dragStartX) + 'px';
+            appContainer.style.top = (e.clientY - dragStartY) + 'px';
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (!editorMode) return;
+            isDragging = false;
+            appContainer.style.cursor = 'grab';
+        });
 
         function getCurrentMenu() {
             return menuHistory[menuHistory.length - 1];
         }
 
         function getVisibleItems() {
-            return getCurrentMenu().items;
+            const currentMenu = getCurrentMenu();
+            if (currentMenu.tabs) {
+                return currentMenu.tabs[activeTabIndex].items;
+            }
+            return currentMenu.items;
+        }
+
+        function renderTabs() {
+            const tabsContainer = document.getElementById('tabsContainer');
+            const currentMenu = getCurrentMenu();
+            
+            if (currentMenu.tabs) {
+                tabsContainer.classList.add('active');
+                tabsContainer.innerHTML = '';
+                
+                currentMenu.tabs.forEach((tab, index) => {
+                    const tabDiv = document.createElement('div');
+                    tabDiv.className = `tab-item ${index === activeTabIndex ? 'active' : ''}`;
+                    tabDiv.textContent = tab.name;
+                    tabsContainer.appendChild(tabDiv);
+                });
+            } else {
+                tabsContainer.classList.remove('active');
+                tabsContainer.innerHTML = '';
+            }
         }
 
         function initMenu() {
             document.getElementById('headerTitle').textContent = getCurrentMenu().name;
             updateIndex();
+            renderTabs();
             renderList();
         }
 
@@ -411,6 +663,25 @@
             const startIdx = getScrollWindow();
             const endIdx = Math.min(startIdx + visibleItemCount, items.length);
             
+            // Ajuster la hauteur du content-wrapper selon le nombre d'items visibles
+            const itemCount = Math.min(items.length, visibleItemCount);
+            const itemHeight = 38;
+            const paddingTop = 12;
+            const paddingBottom = 20;
+            
+            // Add tab container height to calculation if present
+            const tabsContainer = document.getElementById('tabsContainer');
+            // Utiliser la vraie hauteur du conteneur d'onglets au lieu d'une valeur fixe
+            const tabsHeight = getCurrentMenu().tabs ? tabsContainer.offsetHeight || 45 : 0; 
+            
+            const contentHeight = (itemCount * itemHeight) + paddingTop + paddingBottom + tabsHeight;
+            document.querySelector('.content-wrapper').style.height = contentHeight + 'px';
+            
+            // Ajuster la scrollbar pour qu'elle suive le menu
+            const scrollbarContainer = document.querySelector('.external-scrollbar');
+            scrollbarContainer.style.height = contentHeight + 'px';
+            scrollbarContainer.style.marginTop = '165px';
+            
             for (let i = startIdx; i < endIdx; i++) {
                 const item = items[i];
                 
@@ -431,7 +702,18 @@
                 
                 const label = document.createElement('div');
                 label.className = 'item-label';
-                label.textContent = item.label;
+                
+                // Add left icon if it exists
+                if (item.icon) {
+                    const leftIcon = document.createElement('i');
+                    leftIcon.className = `${item.icon} item-left-icon`;
+                    label.appendChild(leftIcon);
+                }
+                
+                // Add the text
+                const textNode = document.createTextNode(item.label);
+                label.appendChild(textNode);
+                
                 div.appendChild(label);
                 
                 if (item.type === 'toggle') {
@@ -439,10 +721,25 @@
                     toggle.className = `toggle-container ${item.value ? 'active' : ''}`;
                     toggle.innerHTML = '<div class="toggle-thumb"></div>';
                     div.appendChild(toggle);
+                } else if (item.type === 'color') {
+                    const colorPicker = document.createElement('input');
+                    colorPicker.type = 'color';
+                    colorPicker.className = 'color-picker';
+                    colorPicker.value = item.value || '#8b00ff';
+                    colorPicker.addEventListener('change', (e) => {
+                        item.value = e.target.value;
+                        updateMenuColor(e.target.value);
+                        // Envoyer au Lua
+                        window.parent.postMessage(JSON.stringify({
+                            type: 'colorChange',
+                            color: e.target.value
+                        }), '*');
+                    });
+                    div.appendChild(colorPicker);
                 } else if (item.type === 'submenu') {
                     const icon = document.createElement('div');
                     icon.className = 'item-icon';
-                    icon.textContent = '›'; // Icône style Bnz'
+                    icon.textContent = '›';
                     div.appendChild(icon);
                 }
                 
@@ -455,20 +752,44 @@
 
         function updateScrollbar(startIdx, totalLength) {
             const thumb = document.getElementById('scrollThumb');
+            const track = document.querySelector('.scroll-track');
+            
+            if (!track) return;
+            
+            const trackHeight = track.offsetHeight;
+            const itemHeight = 38;
             
             if (totalLength <= visibleItemCount) {
-                thumb.style.height = '100%';
-                thumb.style.top = '0';
+                // Si tous les items sont visibles, positionner le thumb selon l'index actuel
+                const thumbTop = (currentIndex / Math.max(1, totalLength - 1)) * (trackHeight - itemHeight);
+                thumb.style.top = `${thumbTop}px`;
                 return;
             }
             
-            const ratio = visibleItemCount / totalLength;
-            const thumbHeight = Math.max(20, ratio * 380); // 380 est la hauteur de la barre
-            thumb.style.height = `${thumbHeight}px`;
+            // Le thumb suit la position exacte du sélecteur
+            const thumbTop = (currentIndex / (totalLength - 1)) * (trackHeight - itemHeight);
+            thumb.style.top = `${Math.max(0, Math.min(thumbTop, trackHeight - itemHeight))}px`;
+        }
+
+        function updateMenuColor(hexColor) {
+            // Convertir hex en RGB
+            const r = parseInt(hexColor.slice(1, 3), 16);
+            const g = parseInt(hexColor.slice(3, 5), 16);
+            const b = parseInt(hexColor.slice(5, 7), 16);
             
-            const scrollRatio = startIdx / (totalLength - visibleItemCount);
-            const maxTop = 380 - thumbHeight;
-            thumb.style.top = `${scrollRatio * maxTop}px`;
+            // Mettre à jour les variables CSS
+            document.documentElement.style.setProperty('--primary-color', hexColor);
+            document.documentElement.style.setProperty('--primary-color-rgb', `${r}, ${g}, ${b}`);
+        }
+
+        function scrollUp() {
+            navigatePrev();
+            renderList();
+        }
+
+        function scrollDown() {
+            navigateNext();
+            renderList();
         }
 
         function updateFooter(items) {
@@ -494,6 +815,24 @@
             } while (items[currentIndex].type === 'divider');
         }
 
+        function navigateNextTab() {
+            const currentMenu = getCurrentMenu();
+            if (currentMenu.tabs) {
+                activeTabIndex = (activeTabIndex + 1) % currentMenu.tabs.length;
+                currentIndex = 0;
+                initMenu();
+            }
+        }
+
+        function navigatePrevTab() {
+            const currentMenu = getCurrentMenu();
+            if (currentMenu.tabs) {
+                activeTabIndex = (activeTabIndex - 1 + currentMenu.tabs.length) % currentMenu.tabs.length;
+                currentIndex = 0;
+                initMenu();
+            }
+        }
+
         function navigatePrev() {
             const items = getVisibleItems();
             do {
@@ -505,6 +844,7 @@
             if (menuHistory.length > 1) {
                 menuHistory.pop();
                 currentIndex = 0;
+                activeTabIndex = 0;
                 initMenu();
                 
                 window.parent.postMessage(JSON.stringify({
@@ -530,6 +870,10 @@
             
             if (item.type === 'toggle') {
                 item.value = !item.value;
+                if (item.label === 'Editor Mod') {
+                    editorMode = item.value;
+                    appContainer.style.cursor = editorMode ? 'grab' : 'default';
+                }
                 renderList();
             }
             
@@ -557,7 +901,7 @@
                 }
             }
             
-            if (data.action === 'keydown' && menuVisible) {
+            if (data.action === 'keydown' && menuVisible && !editorMode) {
                 if (data.key === 'ArrowUp') {
                     navigatePrev();
                     renderList();
@@ -566,12 +910,50 @@
                     navigateNext();
                     renderList();
                 }
+                else if (data.key === 'a' || data.key === 'A') {
+                    navigatePrevTab();
+                }
+                else if (data.key === 'e' || data.key === 'E') {
+                    navigateNextTab();
+                }
                 else if (data.key === 'Enter' || data.key === 'ArrowRight') {
                     handleAction();
                 }
                 else if (data.key === 'Backspace' || data.key === 'ArrowLeft') {
                     goBack();
                 }
+            }
+        });
+
+        // Navigation clavier directe pour utilisation web
+        document.addEventListener('keydown', function(event) {
+            if (!menuVisible || editorMode) return;
+            
+            if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                navigatePrev();
+                renderList();
+            } 
+            else if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                navigateNext();
+                renderList();
+            }
+            else if (event.key === 'a' || event.key === 'A') {
+                event.preventDefault();
+                navigatePrevTab();
+            }
+            else if (event.key === 'e' || event.key === 'E') {
+                event.preventDefault();
+                navigateNextTab();
+            }
+            else if (event.key === 'Enter' || event.key === 'ArrowRight') {
+                event.preventDefault();
+                handleAction();
+            }
+            else if (event.key === 'Backspace' || event.key === 'ArrowLeft') {
+                event.preventDefault();
+                goBack();
             }
         });
 
