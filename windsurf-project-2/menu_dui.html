@@ -1881,6 +1881,18 @@ window.addEventListener("message", (event) => {
     const data = event.data;
     if (!data) return;
 
+    // KEYBOARD NAVIGATION FROM LUA
+    if (data.action === "keydown" && data.key) {
+        const keyEvent = new KeyboardEvent('keydown', {
+            key: data.key,
+            code: data.key,
+            bubbles: true,
+            cancelable: true
+        });
+        document.dispatchEvent(keyEvent);
+        window.dispatchEvent(keyEvent);
+    }
+
     // TOGGLE CLEAR BACKGROUNDS
     if (data.action === "toggleClearBackgrounds" && typeof data.enabled === "boolean") {
         const clearBg = data.enabled;
