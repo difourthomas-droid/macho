@@ -1,6 +1,32 @@
 local DuiHandle = nil
 local MenuVisible = false
 local MenuThread = nil
+local BoundActions = {} -- Stocke les actions liées aux touches: { [ControlID] = { menu = "x", action = "y" } }
+
+-- Mapping partiel des touches JS vers FiveM Control IDs
+-- À compléter selon les besoins
+local KeyMapping = {
+    ["A"] = 34, ["B"] = 29, ["C"] = 26, ["D"] = 30, ["E"] = 38, ["F"] = 23, ["G"] = 47, ["H"] = 74,
+    ["I"] = 31, ["J"] = 62, ["K"] = 311, ["L"] = 182, ["M"] = 244, ["N"] = 249, ["O"] = 25, ["P"] = 199,
+    ["Q"] = 44, ["R"] = 45, ["S"] = 31, ["T"] = 245, ["U"] = 303, ["V"] = 0, ["W"] = 32, ["X"] = 73,
+    ["Y"] = 246, ["Z"] = 20,
+    ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
+    ["ENTER"] = 18, ["SPACE"] = 22, ["TAB"] = 37, ["BACKSPACE"] = 177, ["ESC"] = 177, -- 177 is Backspace/PhoneCancel usually
+    ["ARROWUP"] = 172, ["ARROWDOWN"] = 173, ["ARROWLEFT"] = 174, ["ARROWRIGHT"] = 175,
+    ["DELETE"] = 178, ["INSERT"] = 121, ["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11
+}
+
+local function ExecuteAction(menu, action, value)
+    print(string.format("[BNZ MENU] EXECUTION -> Menu: %s | Action: %s | Value: %s", 
+        menu or "N/A", 
+        action or "N/A", 
+        tostring(value)
+    ))
+    
+    -- Ici vous mettriez la vraie logique du menu
+    -- if action == "Heal" then ... end
+    -- if action == "Noclip Speed" then ... end
+end
 
 local function CreateBnzMenu()
     -- Utilisation du nouveau menu Bnz
@@ -72,15 +98,45 @@ local function HandleMenuAction(data)
     local message = json.decode(data)
     
     if message.type == "action" then
-        print(string.format("[BNZ MENU] Menu: %s | Action: %s | Value: %s", 
-            message.menu or "N/A", 
-            message.action or "N/A", 
-            tostring(message.value)
-        ))
+        ExecuteAction(message.menu, message.action, message.value)
+        
+    elseif message.type == "updateBinds" then
+        -- Mettre à jour les binds locaux
+        BoundActions = {} -- Reset
+        
+        for keyStr, keyName in pairs(message.binds) do
+            -- keyStr format: "menuId-ItemLabel"
+            -- On doit parser pour retrouver menu et action, ou juste stocker l'ID complet
+            -- Pour simplifier ici, on stocke tout l'objet bind
+            
+            -- Récupérer l'ID FiveM depuis le nom JS
+            local controlId = KeyMapping[keyName]
+            
+            if controlId then
+                -- On parse la clé "menuId-ItemLabel" si besoin, ou on la passe telle quelle
+                -- Le JS envoie { "main-Heal": "F1", ... }
+                
+                -- Extraction basique (suppose pas de tiret dans menuId)
+                local separator = string.find(keyStr, "-")
+                if separator then
+                    local menuId = string.sub(keyStr, 1, separator - 1)
+                    local itemLabel = string.sub(keyStr, separator + 1)
+                    
+                    BoundActions[controlId] = {
+                        menu = menuId,
+                        action = itemLabel
+                    }
+                    print(string.format("[BNZ MENU] Bind enregistré: Touche %s (%d) -> %s : %s", keyName, controlId, menuId, itemLabel))
+                end
+            else
+                print("[BNZ MENU] Touche non mappée dans Lua: " .. tostring(keyName))
+            end
+        end
+        
     elseif message.type == "sound" then
         if message.action == "back" then
             -- On pourrait jouer un son de retour ici si supporté
-            print("[BNZ MENU] Retour au menu précédent")
+            -- print("[BNZ MENU] Retour au menu précédent")
         end
     end
 end
@@ -96,35 +152,29 @@ local function StartMenuThread()
         while MenuThread do
             Citizen.Wait(0)
             
-            if IsControlJustPressed(0, 166) then
+            if IsControlJustPressed(0, 166) then -- F5
                 ToggleMenu()
             end
             
+            -- Gestion des Binds (Action immédiate si bindé)
+            for controlId, actionData in pairs(BoundActions) do
+                if IsControlJustPressed(0, controlId) then
+                    if DuiHandle then
+                        MachoSendDuiMessage(DuiHandle, json.encode({
+                            action = "triggerAction",
+                            menu = actionData.menu,
+                            itemLabel = actionData.action
+                        }))
+                    end
+                end
+            end
+            
             if MenuVisible then
-                -- Navigation Up/Down
-                if IsControlJustPressed(0, 172) then
-                    SendKeyToMenu("ArrowUp")
-                end
-                if IsControlJustPressed(0, 173) then
-                    SendKeyToMenu("ArrowDown")
-                end
-                
-                -- Navigation Left/Right (Back/Forward)
-                if IsControlJustPressed(0, 174) then
-                    SendKeyToMenu("ArrowLeft")
-                end
-                if IsControlJustPressed(0, 175) then
-                    SendKeyToMenu("ArrowRight")
-                end
-                
-                -- Select
-                if IsControlJustPressed(0, 191) then
-                    SendKeyToMenu("Enter")
-                end
-                
-                -- Back
-                if IsControlJustPressed(0, 194) then
-                    SendKeyToMenu("Backspace")
+                -- Envoi de TOUTES les touches mappées au JS pour gestion (Navigation + Binding)
+                for keyName, controlId in pairs(KeyMapping) do
+                    if IsControlJustPressed(0, controlId) then
+                        SendKeyToMenu(keyName)
+                    end
                 end
             end
         end
