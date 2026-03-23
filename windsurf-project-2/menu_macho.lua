@@ -58,6 +58,15 @@ local function DestroyMenu()
     end
 end
 
+local function SendKeyToMenu(key)
+    if DuiHandle and MenuVisible then
+        MachoSendDuiMessage(DuiHandle, json.encode({
+            action = "keydown",
+            key = key
+        }))
+    end
+end
+
 local function StartMenuThread()
     if MenuThread then
         return
@@ -72,10 +81,37 @@ local function StartMenuThread()
             if IsControlJustPressed(0, 166) then
                 ToggleMenu()
             end
+            
+            if MenuVisible then
+                if IsControlJustPressed(0, 172) then
+                    SendKeyToMenu("ArrowUp")
+                end
+                
+                if IsControlJustPressed(0, 173) then
+                    SendKeyToMenu("ArrowDown")
+                end
+                
+                if IsControlJustPressed(0, 174) then
+                    SendKeyToMenu("ArrowLeft")
+                end
+                
+                if IsControlJustPressed(0, 175) then
+                    SendKeyToMenu("ArrowRight")
+                end
+                
+                if IsControlJustPressed(0, 191) then
+                    SendKeyToMenu("Enter")
+                end
+                
+                if IsControlJustPressed(0, 194) then
+                    SendKeyToMenu("Backspace")
+                end
+            end
         end
     end)
     
     print("[FODO MENU] Thread de contrôle démarré")
+    print("[FODO MENU] Navigation: Flèches, Enter, Backspace")
 end
 
 local function StopMenuThread()
