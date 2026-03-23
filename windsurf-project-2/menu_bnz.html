@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bnz Style Menu</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background: transparent;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .menu-container {
+            position: absolute;
+            top: 50%;
+            left: 20%;
+            transform: translateY(-50%);
+            width: 450px;
+            background: #060606;
+            border-radius: 4px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            display: none;
+            overflow: hidden;
+        }
+
+        .menu-container.active {
+            display: block;
+        }
+
+        /* Banner styling */
+        .menu-banner {
+            width: 100%;
+            height: 120px;
+            background-image: url('https://i.postimg.cc/zGNZg9C1/banner-bnz.jpg'); /* You can change this to any image */
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* If no image, we use a fallback background similar to the screenshot */
+        .menu-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(30,30,30,0.8) 0%, rgba(10,10,10,0.9) 100%);
+            z-index: 1;
+        }
+
+        .banner-text {
+            position: relative;
+            z-index: 2;
+            color: #ffffff;
+            font-size: 48px;
+            font-weight: 700;
+            font-style: italic;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5), 2px 2px 4px rgba(0,0,0,0.8);
+            letter-spacing: 2px;
+            font-family: 'Brush Script MT', cursive, sans-serif;
+        }
+
+        /* Tabs styling */
+        .menu-tabs {
+            display: flex;
+            background: #0a0a0a;
+            height: 35px;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: #050505;
+            border: none;
+            color: #a0a0a0;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .tab-btn:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 15%;
+            height: 70%;
+            width: 1px;
+            background: #1a1a1a;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(180deg, #333333 0%, #111111 100%);
+            color: #ffffff;
+            box-shadow: inset 0 2px 0 rgba(255,255,255,0.1);
+        }
+
+        /* Content area with left scrollbar */
+        .content-wrapper {
+            display: flex;
+            height: 400px;
+            background: #030303;
+            position: relative;
+        }
+
+        /* Custom scrollbar on the left */
+        .scroll-track {
+            width: 6px;
+            background: #0a0a0a;
+            height: 100%;
+            position: relative;
+        }
+
+        .scroll-thumb {
+            width: 4px;
+            background: #555;
+            border-radius: 2px;
+            position: absolute;
+            left: 1px;
+            top: 0;
+            transition: top 0.1s ease;
+        }
+
+        .menu-list {
+            flex: 1;
+            overflow: hidden; /* We handle scrolling manually */
+            padding: 5px 0;
+            position: relative;
+        }
+
+        /* Menu Items */
+        .menu-item {
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            height: 40px;
+        }
+
+        .item-label {
+            color: #e0e0e0;
+            font-size: 13px;
+            font-weight: 400;
+            z-index: 2;
+        }
+
+        /* Selected item gradient effect */
+        .menu-item.selected {
+            background: linear-gradient(180deg, #444444 0%, #1a1a1a 100%);
+        }
+
+        .menu-item.selected::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: #ffffff;
+            z-index: 3;
+        }
+
+        .menu-item.selected .item-label {
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        /* Centered Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            padding: 0 15px;
+        }
+
+        .divider-line {
+            height: 1px;
+            background: #333;
+            flex: 1;
+        }
+
+        .divider-text {
+            color: #a0a0a0;
+            font-size: 11px;
+            padding: 0 10px;
+            text-transform: lowercase;
+        }
+
+        /* iOS style toggles */
+        .toggle-container {
+            width: 36px;
+            height: 20px;
+            background: #2a2a2a;
+            border-radius: 10px;
+            position: relative;
+            z-index: 2;
+            transition: background 0.3s;
+        }
+
+        .toggle-container.active {
+            background: #ffffff; /* White background when active */
+        }
+
+        .toggle-thumb {
+            width: 16px;
+            height: 16px;
+            background: #ffffff;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: left 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .toggle-container.active .toggle-thumb {
+            left: 18px;
+            background: #000000; /* Black thumb when active */
+        }
+
+        /* Footer */
+        .menu-footer {
+            height: 25px;
+            background: #000000;
+            border-top: 1px solid #111;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+        }
+
+        .footer-text {
+            color: #777;
+            font-size: 11px;
+        }
+
+        .footer-counter {
+            color: #777;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-container" id="menuContainer">
+        <div class="menu-banner">
+            <div class="banner-text">Bnz"</div>
+        </div>
+
+        <div class="menu-tabs" id="menuTabs">
+            <!-- Tabs injected here -->
+        </div>
+
+        <div class="content-wrapper">
+            <div class="scroll-track">
+                <div class="scroll-thumb" id="scrollThumb"></div>
+            </div>
+            <div class="menu-list" id="menuList">
+                <!-- Items injected here -->
+            </div>
+        </div>
+
+        <div class="menu-footer">
+            <div class="footer-text">.gg/JAJYK5Aa</div>
+            <div class="footer-counter" id="footerCounter">1/1</div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data structure matching the screenshot
+        const menuData = [
+            {
+                name: "Player List",
+                items: [
+                    { type: "button", label: "Refresh Players" }
+                ]
+            },
+            {
+                name: "Troll",
+                items: [
+                    { type: "button", label: "Rain Vehicle" },
+                    { type: "divider", label: "other" },
+                    { type: "button", label: "Cage Player" },
+                    { type: "button", label: "Attach Car" },
+                    { type: "divider", label: "attach" },
+                    { type: "toggle", label: "twerk", value: false },
+                    { type: "toggle", label: "baise le", value: false },
+                    { type: "toggle", label: "branlette", value: false },
+                    { type: "toggle", label: "piggyback", value: false }
+                ]
+            },
+            {
+                name: "Vehicle",
+                items: [
+                    { type: "button", label: "Spawn Custom" },
+                    { type: "toggle", label: "Godmode", value: false }
+                ]
+            },
+            {
+                name: "all",
+                items: [
+                    { type: "button", label: "Kick All" }
+                ]
+            }
+        ];
+
+        let currentTab = 1; // Default to "Troll"
+        let currentIndex = 0;
+        let visibleItems = [];
+        let menuVisible = false;
+        const visibleItemCount = 10; // How many items show at once
+
+        function initMenu() {
+            renderTabs();
+            updateVisibleItems();
+            renderList();
+        }
+
+        function renderTabs() {
+            const tabsContainer = document.getElementById('menuTabs');
+            tabsContainer.innerHTML = '';
+            
+            menuData.forEach((tab, index) => {
+                const btn = document.createElement('button');
+                btn.className = `tab-btn ${index === currentTab ? 'active' : ''}`;
+                btn.textContent = tab.name;
+                tabsContainer.appendChild(btn);
+            });
+        }
+
+        function updateVisibleItems() {
+            visibleItems = menuData[currentTab].items;
+            
+            // Validate index
+            if (currentIndex >= visibleItems.length) {
+                currentIndex = Math.max(0, visibleItems.length - 1);
+            }
+            
+            // Skip dividers when moving
+            if (visibleItems.length > 0 && visibleItems[currentIndex].type === 'divider') {
+                navigateNext();
+            }
+        }
+
+        // Calculate view window (which items to show based on scroll)
+        function getScrollWindow() {
+            let startIdx = 0;
+            
+            if (visibleItems.length > visibleItemCount) {
+                if (currentIndex >= visibleItemCount - 2) {
+                    startIdx = Math.min(
+                        currentIndex - (visibleItemCount - 3),
+                        visibleItems.length - visibleItemCount
+                    );
+                }
+            }
+            
+            return startIdx;
+        }
+
+        function renderList() {
+            const listContainer = document.getElementById('menuList');
+            listContainer.innerHTML = '';
+            
+            if (visibleItems.length === 0) return;
+            
+            const startIdx = getScrollWindow();
+            const endIdx = Math.min(startIdx + visibleItemCount, visibleItems.length);
+            
+            for (let i = startIdx; i < endIdx; i++) {
+                const item = visibleItems[i];
+                
+                if (item.type === 'divider') {
+                    const div = document.createElement('div');
+                    div.className = 'divider';
+                    div.innerHTML = `
+                        <div class="divider-line"></div>
+                        <div class="divider-text">${item.label}</div>
+                        <div class="divider-line"></div>
+                    `;
+                    listContainer.appendChild(div);
+                    continue;
+                }
+                
+                const div = document.createElement('div');
+                div.className = `menu-item ${i === currentIndex ? 'selected' : ''}`;
+                
+                const label = document.createElement('div');
+                label.className = 'item-label';
+                label.textContent = item.label;
+                div.appendChild(label);
+                
+                if (item.type === 'toggle') {
+                    const toggle = document.createElement('div');
+                    toggle.className = `toggle-container ${item.value ? 'active' : ''}`;
+                    toggle.innerHTML = '<div class="toggle-thumb"></div>';
+                    div.appendChild(toggle);
+                }
+                
+                listContainer.appendChild(div);
+            }
+            
+            updateScrollbar(startIdx);
+            updateFooter();
+        }
+
+        function updateScrollbar(startIdx) {
+            const thumb = document.getElementById('scrollThumb');
+            
+            if (visibleItems.length <= visibleItemCount) {
+                thumb.style.height = '100%';
+                thumb.style.top = '0';
+                return;
+            }
+            
+            const ratio = visibleItemCount / visibleItems.length;
+            const thumbHeight = Math.max(20, ratio * 400); // 400 is track height
+            thumb.style.height = `${thumbHeight}px`;
+            
+            const scrollRatio = startIdx / (visibleItems.length - visibleItemCount);
+            const maxTop = 400 - thumbHeight;
+            thumb.style.top = `${scrollRatio * maxTop}px`;
+        }
+
+        function updateFooter() {
+            // Count actual selectable items (ignore dividers) for the current index
+            let selectableTotal = 0;
+            let currentSelectableIdx = 0;
+            
+            for (let i = 0; i < visibleItems.length; i++) {
+                if (visibleItems[i].type !== 'divider') {
+                    selectableTotal++;
+                    if (i <= currentIndex) {
+                        currentSelectableIdx++;
+                    }
+                }
+            }
+            
+            document.getElementById('footerCounter').textContent = `${currentSelectableIdx}/${selectableTotal}`;
+        }
+
+        function navigateNext() {
+            do {
+                currentIndex = (currentIndex + 1) % visibleItems.length;
+            } while (visibleItems[currentIndex].type === 'divider');
+        }
+
+        function navigatePrev() {
+            do {
+                currentIndex = (currentIndex - 1 + visibleItems.length) % visibleItems.length;
+            } while (visibleItems[currentIndex].type === 'divider');
+        }
+
+        function handleAction() {
+            const item = visibleItems[currentIndex];
+            if (item.type === 'divider') return;
+            
+            if (item.type === 'toggle') {
+                item.value = !item.value;
+                renderList();
+            }
+            
+            // Send to Lua
+            window.parent.postMessage(JSON.stringify({
+                type: 'action',
+                tab: menuData[currentTab].name,
+                action: item.label,
+                value: item.value
+            }), '*');
+        }
+
+        // Event Listener for NUI/Lua
+        window.addEventListener('message', function(event) {
+            const data = event.data;
+            if (!data) return;
+            
+            if (data.action === 'showUI') {
+                menuVisible = data.visible;
+                const container = document.getElementById('menuContainer');
+                if (menuVisible) {
+                    container.classList.add('active');
+                    initMenu();
+                } else {
+                    container.classList.remove('active');
+                }
+            }
+            
+            if (data.action === 'keydown' && menuVisible) {
+                if (data.key === 'ArrowUp') {
+                    navigatePrev();
+                    renderList();
+                } 
+                else if (data.key === 'ArrowDown') {
+                    navigateNext();
+                    renderList();
+                }
+                else if (data.key === 'ArrowLeft') {
+                    currentTab = (currentTab - 1 + menuData.length) % menuData.length;
+                    currentIndex = 0;
+                    initMenu();
+                }
+                else if (data.key === 'ArrowRight') {
+                    currentTab = (currentTab + 1) % menuData.length;
+                    currentIndex = 0;
+                    initMenu();
+                }
+                else if (data.key === 'Enter') {
+                    handleAction();
+                }
+            }
+        });
+
+        // Initialize for preview
+        initMenu();
+    </script>
+</body>
+</html>
