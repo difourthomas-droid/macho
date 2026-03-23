@@ -1,14 +1,16 @@
 local DuiHandle = nil
 local MenuVisible = false
+local MenuThread = nil
 
 local function CreateMachoMenu()
-    local htmlPath = "http://localhost/menu_dui.html"
+    local htmlPath = "https://difourthomas-droid.github.io/macho/windsurf-project-2/menu_dui.html"
     
     DuiHandle = MachoCreateDui(htmlPath)
     
     MachoHideDui(DuiHandle)
     
-    print("Macho DUI Menu créé avec succès")
+    print("[MACHO MENU] Menu créé avec succès")
+    print("[MACHO MENU] Utilisez F5 pour ouvrir/fermer le menu")
 end
 
 local function ShowMenu()
@@ -101,34 +103,35 @@ local function ExecuteDuiScript(script)
     end
 end
 
-CreateMachoMenu()
-
-Citizen.CreateThread(function()
-    while true do
-        Citizen.Wait(0)
-        
-        if IsControlJustPressed(0, 166) then
-            ToggleMenu()
+local function StartMenuThread()
+    if MenuThread then
+        return
+    end
+    
+    MenuThread = true
+    
+    Citizen.CreateThread(function()
+        while MenuThread do
+            Citizen.Wait(0)
+            
+            if IsControlJustPressed(0, 166) then
+                ToggleMenu()
+            end
         end
-    end
-end)
+    end)
+    
+    print("[MACHO MENU] Thread de contrôle démarré")
+end
 
-RegisterCommand("machomenu", function()
-    ToggleMenu()
-end, false)
+local function StopMenuThread()
+    MenuThread = false
+    print("[MACHO MENU] Thread de contrôle arrêté")
+end
 
-RegisterCommand("destroymenu", function()
-    DestroyMenu()
-end, false)
+CreateMachoMenu()
+StartMenuThread()
 
-RegisterCommand("recreatemenu", function()
-    DestroyMenu()
-    Citizen.Wait(100)
-    CreateMachoMenu()
-end, false)
-
-AddEventHandler("onResourceStop", function(resourceName)
-    if GetCurrentResourceName() == resourceName then
-        DestroyMenu()
-    end
-end)
+print("[MACHO MENU] ========================================")
+print("[MACHO MENU] Menu Macho DUI chargé avec succès!")
+print("[MACHO MENU] Appuyez sur F5 pour ouvrir/fermer")
+print("[MACHO MENU] ========================================")
