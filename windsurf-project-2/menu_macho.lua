@@ -2,15 +2,15 @@ local DuiHandle = nil
 local MenuVisible = false
 local MenuThread = nil
 
-local function CreateMachoMenu()
+local function CreateFodoMenu()
     local htmlPath = "https://difourthomas-droid.github.io/macho/windsurf-project-2/menu_dui.html"
     
     DuiHandle = MachoCreateDui(htmlPath)
     
     MachoHideDui(DuiHandle)
     
-    print("[MACHO MENU] Menu créé avec succès")
-    print("[MACHO MENU] Utilisez F5 pour ouvrir/fermer le menu")
+    print("[FODO MENU] Menu FODO créé avec succès")
+    print("[FODO MENU] Utilisez F5 pour ouvrir/fermer le menu")
 end
 
 local function ShowMenu()
@@ -19,10 +19,11 @@ local function ShowMenu()
         MenuVisible = true
         
         MachoSendDuiMessage(DuiHandle, json.encode({
-            action = "show"
+            action = "showUI",
+            visible = true
         }))
         
-        print("Menu affiché")
+        print("[FODO MENU] Menu affiché")
     end
 end
 
@@ -32,10 +33,11 @@ local function HideMenu()
         MenuVisible = false
         
         MachoSendDuiMessage(DuiHandle, json.encode({
-            action = "hide"
+            action = "showUI",
+            visible = false
         }))
         
-        print("Menu masqué")
+        print("[FODO MENU] Menu masqué")
     end
 end
 
@@ -52,54 +54,7 @@ local function DestroyMenu()
         MachoDestroyDui(DuiHandle)
         DuiHandle = nil
         MenuVisible = false
-        print("Menu détruit")
-    end
-end
-
-local function HandleDuiMessage(data)
-    local message = json.decode(data)
-    
-    if message.type == "close" then
-        HideMenu()
-        
-    elseif message.type == "action" then
-        print("Action reçue: " .. message.action)
-        
-        if message.action == "action1" then
-            print("Exécution de l'action 1")
-        elseif message.action == "action2" then
-            print("Exécution de l'action 2")
-        elseif message.action == "action3" then
-            print("Exécution de l'action 3")
-        end
-        
-    elseif message.type == "checkbox" then
-        print("Checkbox " .. message.id .. " changée: " .. tostring(message.checked))
-        
-    elseif message.type == "slider" then
-        print("Slider " .. message.id .. " mis à jour: " .. message.value .. "%")
-        
-    elseif message.type == "input" then
-        print("Input " .. message.id .. " mis à jour: " .. message.value)
-        
-    elseif message.type == "dropdown" then
-        print("Dropdown " .. message.id .. " sélectionné: " .. message.value)
-    end
-end
-
-local function UpdateDuiValue(element, value)
-    if DuiHandle then
-        MachoSendDuiMessage(DuiHandle, json.encode({
-            action = "updateValue",
-            element = element,
-            value = value
-        }))
-    end
-end
-
-local function ExecuteDuiScript(script)
-    if DuiHandle then
-        MachoExecuteDuiScript(DuiHandle, script)
+        print("[FODO MENU] Menu détruit")
     end
 end
 
@@ -120,18 +75,18 @@ local function StartMenuThread()
         end
     end)
     
-    print("[MACHO MENU] Thread de contrôle démarré")
+    print("[FODO MENU] Thread de contrôle démarré")
 end
 
 local function StopMenuThread()
     MenuThread = false
-    print("[MACHO MENU] Thread de contrôle arrêté")
+    print("[FODO MENU] Thread de contrôle arrêté")
 end
 
-CreateMachoMenu()
+CreateFodoMenu()
 StartMenuThread()
 
-print("[MACHO MENU] ========================================")
-print("[MACHO MENU] Menu Macho DUI chargé avec succès!")
-print("[MACHO MENU] Appuyez sur F5 pour ouvrir/fermer")
-print("[MACHO MENU] ========================================")
+print("[FODO MENU] ========================================")
+print("[FODO MENU] Menu FODO DUI chargé avec succès!")
+print("[FODO MENU] Appuyez sur F5 pour ouvrir/fermer")
+print("[FODO MENU] ========================================")
