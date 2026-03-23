@@ -238,7 +238,7 @@
 
         .menu-list {
             flex: 1;
-            padding: 12px 0 20px 0;
+            padding: 6px 0 10px 0;
             position: relative;
             overflow: visible;
         }
@@ -1396,7 +1396,7 @@
                     return;
                 }
 
-                if (!menuVisible || editorMode) return;
+                if (!menuVisible) return;
 
                 if (key === 'F9') {
                     startBinding();
@@ -1569,8 +1569,8 @@
                 return;
             }
 
-            if (!menuVisible || editorMode) return;
-            
+            if (!menuVisible) return;
+
             if (event.key === 'F9') {
                 event.preventDefault();
                 startBinding();
