@@ -110,7 +110,7 @@
             flex-direction: column;
             border-radius: 3px;
             overflow: hidden;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.8);
         }
 
         
@@ -269,7 +269,7 @@
         }
 
         .item-left-icon {
-            color: #f0f0f0;
+            color: #ffffff;
             font-size: 16px;
             font-weight: 700;
             z-index: 2;
@@ -283,7 +283,7 @@
         }
 
         .menu-item.selected .item-left-icon {
-            color: #f0f0f0;
+            color: #e6e6e6;
         }
 
         .menu-item.selected .item-icon {
@@ -773,6 +773,53 @@
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
             text-shadow: none;
         }
+
+        .selector-container {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            padding: 5px 8px;
+            border-radius: 6px;
+            background: rgba(var(--primary-color-rgb), 0.2);
+            border: 2px solid rgba(var(--primary-color-rgb), 0.5);
+            box-shadow: 0 0 20px rgba(var(--primary-color-rgb), 0.3);
+            z-index: 2;
+        }
+
+        .menu-item.selected .selector-container {
+            background: rgba(var(--primary-color-rgb), 0.28);
+            border: 1px solid rgba(var(--primary-color-rgb), 0.7);
+            box-shadow: 0 0 18px rgba(var(--primary-color-rgb), 0.5);
+        }
+
+        .selector-arrow {
+            width: 12px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .menu-item.selected .selector-arrow {
+            color: #fff;
+        }
+
+        .selector-value {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            min-width: 44px;
+            text-align: center;
+            transition: color 0.3s;
+        }
+
+        .menu-item.selected .selector-value {
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -860,7 +907,7 @@
                         name: "Self",
                         items: [
                             { type: "button", label: "notif" },
-                            { type: "button", label: "Heal" },
+                            { type: "selector", label: "Heal", options: ["test", "test2"], value: "test" },
                             { type: "toggle", label: "Godmode", value: false },
                             { type: "slider", label: "Noclip Speed", value: 1, min: 0.1, max: 10, step: 0.1 }
                         ]
@@ -1205,6 +1252,30 @@
                     sliderContainer.appendChild(slider);
                     sliderContainer.appendChild(sliderValue);
                     div.appendChild(sliderContainer);
+                } else if (item.type === 'selector') {
+                    const selectorContainer = document.createElement('div');
+                    selectorContainer.className = 'selector-container';
+
+                    const leftArrow = document.createElement('div');
+                    leftArrow.className = 'selector-arrow';
+                    const leftIcon = document.createElement('i');
+                    leftIcon.className = 'fa-solid fa-chevron-left';
+                    leftArrow.appendChild(leftIcon);
+
+                    const value = document.createElement('div');
+                    value.className = 'selector-value';
+                    value.textContent = item.value ?? '';
+
+                    const rightArrow = document.createElement('div');
+                    rightArrow.className = 'selector-arrow';
+                    const rightIcon = document.createElement('i');
+                    rightIcon.className = 'fa-solid fa-chevron-right';
+                    rightArrow.appendChild(rightIcon);
+
+                    selectorContainer.appendChild(leftArrow);
+                    selectorContainer.appendChild(value);
+                    selectorContainer.appendChild(rightArrow);
+                    div.appendChild(selectorContainer);
                 } else if (item.type === 'submenu') {
                     const icon = document.createElement('div');
                     icon.className = 'item-icon';
@@ -1344,6 +1415,25 @@
 
                     window.parent.postMessage(JSON.stringify({
                         type: 'sliderChange',
+                        label: item.label,
+                        value: item.value
+                    }), '*');
+                }
+            } else if (item.type === 'selector') {
+                if (!Array.isArray(item.options) || item.options.length === 0) return;
+
+                let currentOptionIndex = item.options.indexOf(item.value);
+                if (currentOptionIndex === -1) currentOptionIndex = 0;
+
+                const nextOptionIndex = (currentOptionIndex + direction + item.options.length) % item.options.length;
+                const oldValue = item.value;
+                item.value = item.options[nextOptionIndex];
+
+                if (oldValue !== item.value) {
+                    renderList();
+
+                    window.parent.postMessage(JSON.stringify({
+                        type: 'selectorChange',
                         label: item.label,
                         value: item.value
                     }), '*');
