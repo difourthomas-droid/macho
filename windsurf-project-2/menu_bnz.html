@@ -57,6 +57,7 @@
             align-items: center;
             padding: 3px 0;
             overflow: hidden;
+            transition: height 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         
@@ -82,7 +83,7 @@
             left: 50%;
             transform: translateX(-50%);
             top: 0;
-            transition: top 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Plus rapide pour coller au selecteur */
+            transition: top 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.18s ease;
             box-shadow: 0 0 8px rgba(var(--primary-color-rgb), 0.8);
             cursor: pointer;
             border: none;
@@ -117,7 +118,7 @@
         .menu-banner {
             width: 100%;
             height: 110px;
-            background-image: url('https://i.imgur.com/x5NYwPM.png');
+            background-image: url('https://i.imgur.com/Zf1ieYe.png');
             background-size: cover;
             background-position: center;
             position: relative;
@@ -182,6 +183,19 @@
             border: none;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.9),
                         0 0 40px rgba(var(--primary-color-rgb), 0.05);
+            transition: gap 0.3s ease;
+        }
+
+        .content-footer-group.spaced {
+            gap: 15px;
+            background: transparent !important;
+            box-shadow: none;
+        }
+
+        .content-footer-group.spaced > * {
+            border-radius: 4px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.9),
+                        0 0 40px rgba(var(--primary-color-rgb), 0.05);
         }
 
         .content-wrapper {
@@ -197,6 +211,12 @@
             display: flex;
             flex-direction: column;
             backdrop-filter: blur(15px);
+            transition: height 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.3s ease, backdrop-filter 0.3s ease;
+        }
+
+        .content-wrapper.transparent-bg {
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(2px);
         }
 
         
@@ -210,6 +230,8 @@
             flex-shrink: 0; 
             overflow: hidden; 
             z-index: 10;
+            transition: opacity 0.16s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.16s cubic-bezier(0.2, 0.8, 0.2, 1);
+            will-change: opacity, transform;
         }
 
         .tabs-container.active {
@@ -223,11 +245,24 @@
             font-weight: 600;
             border-radius: 6px;
             background: rgba(255, 255, 255, 0.1); 
-            transition: all 0.3s ease;
+            transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, border 0.2s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
             white-space: nowrap;
             position: relative;
+        }
+
+        .tabs-container.compact {
+            padding: 8px 8px;
+            gap: 6px;
+        }
+
+        .tabs-container.compact .tab-item {
+            padding: 6px 6px;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            flex: 1 1 auto;
+            text-align: center;
         }
 
         .tab-item.active {
@@ -241,7 +276,20 @@
             flex: 1;
             padding: 6px 0 10px 0;
             position: relative;
-            overflow: visible;
+            overflow: hidden;
+            transition: opacity 0.16s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.16s cubic-bezier(0.2, 0.8, 0.2, 1);
+            will-change: opacity, transform;
+        }
+
+        .menu-items {
+            transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+            will-change: transform;
+        }
+
+        .menu-list.category-transitioning,
+        .tabs-container.category-transitioning {
+            opacity: 0;
+            transform: translateY(6px);
         }
 
         
@@ -256,6 +304,7 @@
             border-radius: 4px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             background: transparent;
+            border: 1px solid transparent;
         }
 
         .item-label {
@@ -293,13 +342,14 @@
         
         .menu-item.selected {
             background: linear-gradient(90deg, 
-                var(--primary-color) 0%, 
-                var(--primary-color) 60%, 
+                rgba(var(--primary-color-rgb), 0.8) 0%, 
+                rgba(var(--primary-color-rgb), 0.4) 60%, 
                 transparent 100%);
+            border: 1px solid rgba(var(--primary-color-rgb), 0.8);
             border-right: none;
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15),
-                        inset 0 -1px 0 rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(var(--primary-color-rgb), 0.6);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+                        0 0 15px rgba(var(--primary-color-rgb), 0.4);
             position: relative;
         }
 
@@ -318,10 +368,10 @@
             width: 3px;
             height: 100%;
             background: linear-gradient(180deg, 
-                rgba(255, 255, 255, 0.3) 0%, 
-                var(--primary-color) 50%, 
-                rgba(255, 255, 255, 0.3) 100%);
-            box-shadow: 0 0 8px rgba(var(--primary-color-rgb), 0.8);
+                rgba(255, 255, 255, 0.4) 0%, 
+                #ffffff 50%, 
+                rgba(255, 255, 255, 0.4) 100%);
+            box-shadow: 0 0 12px #ffffff, 0 0 20px var(--primary-color);
             border-radius: 0 2px 2px 0;
         }
 
@@ -356,7 +406,7 @@
             border-radius: 10px;
             position: relative;
             z-index: 2;
-            transition: all 0.3s ease;
+            transition: background 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
@@ -455,7 +505,6 @@
             height: 24px;
             border-radius: 50%;
             border: 2px solid rgba(255, 255, 255, 0.8);
-            cursor: pointer;
             z-index: 2;
             padding: 0;
             overflow: hidden;
@@ -463,6 +512,10 @@
             transition: all 0.3s;
             -webkit-appearance: none;
             appearance: none;
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+            inset: 0;
         }
 
         .color-picker::-webkit-color-swatch-wrapper {
@@ -480,6 +533,27 @@
             box-shadow: 0 0 8px rgba(var(--primary-color-rgb), 0.5);
         }
 
+        .color-control {
+            width: 24px;
+            height: 24px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .color-preview {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.25);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .menu-item.selected .color-preview {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 8px rgba(var(--primary-color-rgb), 0.5), inset 0 1px 2px rgba(0,0,0,0.25);
+        }
+
         .toggle-container.active {
             background: rgba(var(--primary-color-rgb), 0.5);
             border: 1px solid rgba(var(--primary-color-rgb), 0.6);
@@ -495,7 +569,7 @@
             position: absolute;
             top: 1px;
             left: 2px;
-            transition: all 0.3s ease;
+            transition: left 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
         }
 
@@ -503,6 +577,10 @@
             left: 21px;
             background: #ffffff;
             box-shadow: 0 2px 8px rgba(var(--primary-color-rgb), 0.6);
+        }
+
+        .toggle-container.active .toggle-thumb {
+            transform: scale(1.06);
         }
 
         .menu-footer {
@@ -519,9 +597,16 @@
         }
 
         .footer-text {
-            color: #e0e0e0; 
-            font-size: 12px; 
+            display: inline-block;
+            color: #fff;
+            font-size: 12px;
             font-weight: 500;
+            letter-spacing: 0.5px;
+            background: rgba(var(--primary-color-rgb), 0.2);
+            border: 1px solid rgba(var(--primary-color-rgb), 0.5);
+            padding: 2px 8px;
+            border-radius: 4px;
+            box-shadow: 0 0 15px rgba(var(--primary-color-rgb), 0.3);
             z-index: 1;
         }
 
@@ -543,7 +628,7 @@
         }
 
         .footer-logo img {
-            height: 40px;
+            height: 42px;
             width: auto;
             opacity: 0.8;
             transition: opacity 0.3s ease;
@@ -556,10 +641,13 @@
         
         .notification-container {
             position: absolute;
-            top: 20px;
+            top: auto;
             right: 20px;
+            bottom: 20px;
             display: flex;
             flex-direction: column;
+            justify-content: flex-end;
+            align-items: flex-end;
             gap: 10px;
             z-index: 2000;
             pointer-events: none;
@@ -595,25 +683,44 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 5px;
         }
 
-        .notification-icon {
-            color: var(--primary-color);
-            font-size: 14px;
+        .notification-logo {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            object-fit: contain;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(var(--primary-color-rgb), 0.35);
+            box-shadow: 0 0 14px rgba(var(--primary-color-rgb), 0.25);
+            flex: 0 0 auto;
         }
 
-        .notification-title {
-            font-weight: 600;
-            font-size: 14px;
-            color: #fff;
-            text-shadow: 0 0 10px rgba(var(--primary-color-rgb), 0.5);
+        .notification-header-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
         }
 
         .notification-message {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.72);
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .notification-title {
+            font-weight: 700;
             font-size: 13px;
-            color: #ccc;
-            margin-left: 24px;
+            color: #fff;
+            letter-spacing: 0.3px;
+            text-shadow: 0 0 12px rgba(var(--primary-color-rgb), 0.35);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .notification-progress {
@@ -624,6 +731,105 @@
             background: var(--primary-color);
             width: 100%;
             box-shadow: 0 0 5px var(--primary-color);
+        }
+
+        .keybinds-widget {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 300px;
+            background: linear-gradient(135deg,
+                rgba(20, 20, 20, 0.9) 0%,
+                rgba(10, 10, 10, 0.95) 55%,
+                rgba(16, 16, 16, 0.9) 100%);
+            border: 1px solid rgba(var(--primary-color-rgb), 0.28);
+            border-left: 3px solid var(--primary-color);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.55),
+                        0 0 22px rgba(var(--primary-color-rgb), 0.12);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            padding: 12px 12px 10px 12px;
+            pointer-events: none;
+            z-index: 1999;
+        }
+
+        .keybinds-widget.active {
+            display: flex;
+        }
+
+        body.editor-mode .keybinds-widget,
+        body.editor-mode .notification-container {
+            pointer-events: auto;
+            cursor: grab;
+        }
+
+        .keybinds-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .keybinds-logo {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            object-fit: contain;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(var(--primary-color-rgb), 0.35);
+            box-shadow: 0 0 14px rgba(var(--primary-color-rgb), 0.25);
+            flex: 0 0 auto;
+        }
+
+        .keybinds-title {
+            font-weight: 800;
+            font-size: 13px;
+            color: #fff;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            text-shadow: 0 0 12px rgba(var(--primary-color-rgb), 0.35);
+        }
+
+        .keybinds-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .keybinds-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .keybinds-label {
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .keybinds-key {
+            font-size: 11px;
+            font-weight: 800;
+            background: rgba(var(--primary-color-rgb), 0.18);
+            border: 1px solid rgba(var(--primary-color-rgb), 0.45);
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 6px;
+            box-shadow: 0 0 14px rgba(var(--primary-color-rgb), 0.18);
+            flex: 0 0 auto;
+        }
+
+        .keybinds-empty {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.55);
         }
 
         
@@ -649,13 +855,18 @@
         }
 
         .bind-content {
-            background: #111;
+            background: linear-gradient(135deg,
+                rgba(18, 18, 18, 0.95) 0%,
+                rgba(8, 8, 8, 0.98) 55%,
+                rgba(14, 14, 14, 0.95) 100%);
+            border: 1px solid rgba(var(--primary-color-rgb), 0.28);
             border-top: 2px solid var(--primary-color);
-            border-radius: 12px;
-            padding: 25px 30px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-            min-width: 400px;
+            border-radius: 14px;
+            padding: 20px 22px;
+            text-align: left;
+            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.85),
+                        0 0 22px rgba(var(--primary-color-rgb), 0.12);
+            min-width: 420px;
             transform: scale(0.95);
             transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
@@ -667,19 +878,95 @@
             transform: scale(1);
         }
 
+        .bind-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .bind-logo {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            object-fit: contain;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(var(--primary-color-rgb), 0.35);
+            box-shadow: 0 0 16px rgba(var(--primary-color-rgb), 0.25);
+            flex: 0 0 auto;
+        }
+
+        .bind-header-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+
         .bind-title {
             color: #fff;
-            font-size: 18px;
-            font-weight: 500;
-            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin: 0;
         }
 
         .bind-item-name {
-            color: #aaa;
-            font-size: 13px;
-            font-weight: 400;
-            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 12px;
+            font-weight: 500;
             display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .freecam-overlay {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 2000;
+            text-align: center;
+        }
+
+        .freecam-overlay.active {
+            display: flex;
+        }
+
+        .freecam-option {
+            color: rgba(220, 220, 220, 0.9);
+            font-size: 18px;
+            font-weight: 700;
+            font-style: italic;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-shadow: 
+                -1px -1px 0 #000,  
+                 1px -1px 0 #000,
+                -1px  1px 0 #000,
+                 1px  1px 0 #000,
+                 0px 2px 4px rgba(0,0,0,0.8);
+            letter-spacing: 0.5px;
+            transition: all 0.15s ease;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .freecam-option.selected {
+            color: var(--primary-color);
+            opacity: 1;
+            text-shadow: 
+                -1px -1px 0 rgba(0,0,0,0.8),  
+                 1px -1px 0 rgba(0,0,0,0.8),
+                -1px  1px 0 rgba(0,0,0,0.8),
+                 1px  1px 0 rgba(0,0,0,0.8),
+                 0 0 12px rgba(var(--primary-color-rgb), 0.7),
+                 0px 2px 5px rgba(0,0,0,0.9);
+            transform: scale(1.08);
+            font-weight: 800;
         }
 
         
@@ -689,10 +976,10 @@
             font-weight: 400;
             height: 40px;
             line-height: 38px;
-            margin-bottom: 10px;
-            background: #050505;
-            border: 1px solid #333;
-            border-radius: 4px;
+            margin-top: 4px;
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
             text-align: left;
             padding: 0 15px;
             transition: border-color 0.2s;
@@ -724,14 +1011,14 @@
 
         .bind-instructions {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             gap: 15px;
             padding-top: 10px;
         }
 
         .instruction-item {
             font-size: 11px;
-            color: #666;
+            color: rgba(255, 255, 255, 0.55);
             display: flex;
             align-items: center;
             gap: 6px;
@@ -777,56 +1064,71 @@
         .selector-container {
             display: flex;
             align-items: center;
-            gap: 2px;
-            padding: 5px 8px;
-            border-radius: 6px;
-            background: rgba(var(--primary-color-rgb), 0.2);
-            border: 2px solid rgba(var(--primary-color-rgb), 0.5);
-            box-shadow: 0 0 20px rgba(var(--primary-color-rgb), 0.3);
+            justify-content: space-between;
+            min-width: 120px;
+            height: 26px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 13px;
+            border: 1px solid rgba(var(--primary-color-rgb), 0.3);
+            padding: 0 4px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
             z-index: 2;
+            transition: all 0.3s ease;
         }
 
         .menu-item.selected .selector-container {
-            background: rgba(var(--primary-color-rgb), 0.28);
-            border: 1px solid rgba(var(--primary-color-rgb), 0.7);
-            box-shadow: 0 0 18px rgba(var(--primary-color-rgb), 0.5);
+            background: rgba(0, 0, 0, 0.6);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(var(--primary-color-rgb), 0.8), inset 0 2px 4px rgba(0, 0, 0, 0.6);
         }
 
         .selector-arrow {
-            width: 12px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: rgba(var(--primary-color-rgb), 0.15);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #fff;
-            font-size: 12px;
-            font-weight: 700;
-            line-height: 1;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 10px;
+            transition: all 0.3s ease;
         }
 
         .menu-item.selected .selector-arrow {
+            background: var(--primary-color);
             color: #fff;
+            box-shadow: 0 0 12px var(--primary-color);
         }
 
         .selector-value {
-            color: #fff;
-            font-size: 14px;
-            font-weight: 600;
-            min-width: 44px;
+            flex: 1;
+            color: #aaa;
+            font-size: 12px;
+            font-weight: 700;
             text-align: center;
-            transition: color 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0 8px;
+            transition: all 0.3s ease;
         }
 
         .menu-item.selected .selector-value {
             color: #fff;
+            text-shadow: 0 0 8px rgba(var(--primary-color-rgb), 0.8);
         }
     </style>
 </head>
 <body>
     <div class="bind-modal" id="bindModal">
         <div class="bind-content">
-            <div class="bind-title">ASSIGN KEYBIND</div>
-            <span class="bind-item-name" id="bindItemName">Option Name</span>
+            <div class="bind-header">
+                <img class="bind-logo" src="https://i.imgur.com/t2Ub2iv.png" alt="Logo" />
+                <div class="bind-header-text">
+                    <div class="bind-title">ASSIGN KEYBIND</div>
+                    <span class="bind-item-name" id="bindItemName">Option Name</span>
+                </div>
+            </div>
             <div class="bind-key-display placeholder" id="bindKeyDisplay">PRESS ANY KEY</div>
             
             <div class="bind-instructions">
@@ -842,6 +1144,7 @@
         </div>
     </div>
     <div class="notification-container" id="notificationContainer"></div>
+    <div class="keybinds-widget" id="keybindsWidget"></div>
     <div class="app-container active" id="appContainer">
         
         <div class="external-scrollbar">
@@ -881,6 +1184,15 @@
         </div>
     </div>
 
+    <!-- Freecam Overlay -->
+    <div class="freecam-overlay" id="freecamOverlay">
+        <div class="freecam-option" onclick="handleFreecamClick(0)">Black Hole</div>
+        <div class="freecam-option" onclick="handleFreecamClick(1)">Teleport</div>
+        <div class="freecam-option selected" onclick="handleFreecamClick(2)">Vehicle Teleport: Ocean</div>
+        <div class="freecam-option" onclick="handleFreecamClick(3)">Shoot Vehicle</div>
+        <div class="freecam-option" onclick="handleFreecamClick(4)">Shoot Current Weapon</div>
+    </div>
+
     <script>
 
         const menuData = {
@@ -889,11 +1201,11 @@
             items: [
                 { type: "submenu", label: "Player", target: "player", icon: "fa-solid fa-user" },
                 { type: "submenu", label: "Online", target: "online", icon: "fa-solid fa-wifi" },
-                { type: "submenu", label: "Weapon", target: "combat", icon: "fa-solid fa-gun" },
+                { type: "submenu", label: "Weapon", target: "combat", icon: "fa-solid fa-khanda" },
                 { type: "submenu", label: "Vehicle", target: "vehicle", icon: "fa-solid fa-car" },
                 { type: "submenu", label: "Server", target: "server", icon: "fa-solid fa-server" },
-                { type: "submenu", label: "Miscellaneous", target: "misc", icon: "fa-solid fa-cube" },
-                { type: "submenu", label: "Settings", target: "settings", icon: "fa-solid fa-gear" }
+                { type: "submenu", label: "Miscellaneous", target: "misc", icon: "fa-solid fa-flask" },
+                { type: "submenu", label: "Settings", target: "settings", icon: "fa-solid fa-sliders" }
             ]
         };
 
@@ -934,9 +1246,41 @@
             "online": {
                 id: "online",
                 name: "Online",
-                items: [
-                    { type: "button", label: "Player List" },
-                    { type: "button", label: "Teleport To Waypoint" }
+                tabs: [
+                    {
+                        id: "player_list",
+                        name: "Player List",
+                        items: [
+                            { type: "button", label: "test" },
+                            { type: "button", label: "test" },
+                            { type: "button", label: "test" },
+                            { type: "button", label: "test" },
+                            { type: "button", label: "test" },
+                            { type: "button", label: "test" },
+                            { type: "button", label: "test" },
+                            { type: "button", label: "test" },
+                            { type: "button", label: "test" },
+                            { type: "button", label: "test" }
+                        ]
+                    },
+                    {
+                        id: "troll",
+                        name: "Troll",
+                        items: [
+                            { type: "button", label: "test" },
+                            { type: "button", label: "test" },
+                            { type: "button", label: "test" }
+                        ]
+                    },
+                    {
+                        id: "vehicle_troll",
+                        name: "vehicle troll",
+                        items: [
+                            { type: "button", label: "test" },
+                            { type: "button", label: "test" },
+                            { type: "button", label: "test" }
+                        ]
+                    }
                 ]
             },
             "visual": {
@@ -950,37 +1294,139 @@
             "combat": {
                 id: "combat",
                 name: "Combat",
-                items: [
-                    { type: "button", label: "Give All Weapons" },
-                    { type: "toggle", label: "Infinite Ammo", value: false },
-                    { type: "toggle", label: "No Recoil", value: false }
+                tabs: [
+                    {
+                        id: "spawn",
+                        name: "Spawn",
+                        items: [
+                            { type: "button", label: "test" },
+                            { type: "button", label: "test" },
+                            { type: "button", label: "test" }
+                        ]
+                    },
+                    {
+                        id: "mods",
+                        name: "Mods",
+                        items: [
+                            { type: "toggle", label: "test", value: false },
+                            { type: "toggle", label: "test", value: false },
+                            { type: "toggle", label: "test", value: false }
+                        ]
+                    }
                 ]
             },
             "vehicle": {
                 id: "vehicle",
                 name: "Vehicle",
-                items: [
-                    { type: "button", label: "Spawn Vehicle" },
-                    { type: "button", label: "Repair" },
-                    { type: "toggle", label: "Vehicle Godmode", value: false }
+                tabs: [
+                    {
+                        id: "spawn",
+                        name: "spawn",
+                        items: [
+                            { type: "button", label: "test" },
+                            { type: "button", label: "test" },
+                            { type: "button", label: "test" }
+                        ]
+                    },
+                    {
+                        id: "actions",
+                        name: "actions",
+                        items: [
+                            { type: "button", label: "test" },
+                            { type: "button", label: "test" },
+                            { type: "toggle", label: "test", value: false }
+                        ]
+                    },
+                    {
+                        id: "performance",
+                        name: "performance",
+                        items: [
+                            { type: "slider", label: "test", value: 1, min: 0, max: 10, step: 1 },
+                            { type: "toggle", label: "test", value: false }
+                        ]
+                    },
+                    {
+                        id: "radar",
+                        name: "radar",
+                        items: [
+                            { type: "toggle", label: "test", value: false },
+                            { type: "toggle", label: "test", value: false }
+                        ]
+                    }
+                ]
+            },
+            "server": {
+                id: "server",
+                name: "Server",
+                tabs: [
+                    {
+                        id: "bypass",
+                        name: "Bypass",
+                        items: [
+                            { type: "button", label: "test" },
+                            { type: "button", label: "test" },
+                            { type: "button", label: "test" }
+                        ]
+                    },
+                    {
+                        id: "exploit",
+                        name: "Exploit",
+                        items: [
+                            { type: "button", label: "test" },
+                            { type: "button", label: "test" },
+                            { type: "button", label: "test" }
+                        ]
+                    }
                 ]
             },
             "misc": {
                 id: "misc",
                 name: "Miscellaneous",
-                items: [
-                    { type: "button", label: "Clear Area" },
-                    { type: "toggle", label: "Never Wanted", value: false }
+                tabs: [
+                    {
+                        id: "misc",
+                        name: "misc",
+                        items: [
+                            { type: "button", label: "test" },
+                            { type: "toggle", label: "test", value: false },
+                            { type: "button", label: "test" }
+                        ]
+                    },
+                    {
+                        id: "freecam",
+                        name: "Freecam",
+                        items: [
+                            { type: "toggle", label: "Freecam", value: false },
+                            { type: "slider", label: "Speed", value: 1, min: 0.1, max: 10, step: 0.1 },
+                            { type: "slider", label: "FOV", value: 50, min: 30, max: 120, step: 1 }
+                        ]
+                    }
                 ]
             },
             "settings": {
                 id: "settings",
                 name: "Settings",
-                items: [
-                    { type: "button", label: "Save Config", icon: "fa-solid fa-floppy-disk" },
-                    { type: "button", label: "Load Config", icon: "fa-solid fa-file-arrow-up" },
-                    { type: "color", label: "Change Color", value: "#8b00ff", icon: "fa-solid fa-droplet" },
-                    { type: "toggle", label: "Editor Mod", value: false, icon: "fa-solid fa-up-down-left-right" }
+                tabs: [
+                    {
+                        id: "design",
+                        name: "design",
+                        items: [
+                            { type: "color", label: "Change Color", value: "#8b00ff", icon: "fa-solid fa-droplet" },
+                            { type: "selector", label: "Menu banner", options: ["Purple", "Red", "Green", "Pink", "Black"], value: "Purple" },
+                            { type: "toggle", label: "Transparent Background", value: false, icon: "fa-solid fa-ghost" },
+                            { type: "toggle", label: "Spaced Footer", value: false, icon: "fa-solid fa-arrows-up-down" },
+                            { type: "toggle", label: "Keybind list", value: false, icon: "fa-solid fa-key" },
+                            { type: "toggle", label: "Editor Mod", value: false, icon: "fa-solid fa-up-down-left-right" }
+                        ]
+                    },
+                    {
+                        id: "configs",
+                        name: "configs",
+                        items: [
+                            { type: "button", label: "Save Config", icon: "fa-solid fa-floppy-disk" },
+                            { type: "button", label: "Load Config", icon: "fa-solid fa-file-arrow-up" }
+                        ]
+                    }
                 ]
             }
         };
@@ -999,30 +1445,150 @@
         let pendingBindKey = null; // Key waiting for confirmation
         let keybinds = {}; // Format: { "menuId-itemLabel": "KEY_NAME" }
 
+        let keybindWidgetVisible = false;
+        let isFreecamActive = false;
+        let freecamSelectedIndex = 2; // Default to Vehicle Teleport
+        
+        const teleportLocations = ["Ocean", "City", "Sandy Shores", "Paleto Bay", "Airport", "Mount Chiliad"];
+        let currentTeleportIndex = 0;
+
+        function updateFreecamSelection() {
+            const options = document.querySelectorAll('.freecam-option');
+            options.forEach((opt, index) => {
+                if (index === freecamSelectedIndex) {
+                    opt.classList.add('selected');
+                } else {
+                    opt.classList.remove('selected');
+                }
+            });
+        }
+
+        function updateTeleportLocationDisplay() {
+            const options = document.querySelectorAll('.freecam-option');
+            // Assuming "Vehicle Teleport" is the 3rd option (index 2)
+            if (options[2]) {
+                options[2].textContent = `Vehicle Teleport: ${teleportLocations[currentTeleportIndex]}`;
+            }
+        }
+
+        function handleFreecamClick(index) {
+            if (!isFreecamActive) return;
+            
+            if (freecamSelectedIndex === index && index === 2) {
+                // If already selected and it's the teleport option, cycle location
+                currentTeleportIndex = (currentTeleportIndex + 1) % teleportLocations.length;
+                updateTeleportLocationDisplay();
+            } else {
+                freecamSelectedIndex = index;
+                updateFreecamSelection();
+            }
+            
+            // Execute action if clicked
+            if (index !== 2 || (freecamSelectedIndex === index && index === 2)) {
+                const selectedOption = document.querySelectorAll('.freecam-option')[freecamSelectedIndex].textContent;
+                window.parent.postMessage(JSON.stringify({
+                    type: 'freecamAction',
+                    action: selectedOption
+                }), '*');
+            }
+        }
+
+        function setKeybindWidgetVisible(visible) {
+            keybindWidgetVisible = visible;
+            const widget = document.getElementById('keybindsWidget');
+            if (!widget) return;
+            widget.classList.toggle('active', visible || editorMode);
+            if (visible || editorMode) renderKeybindWidget();
+        }
+
+        function renderKeybindWidget() {
+            const widget = document.getElementById('keybindsWidget');
+            if (!widget || (!keybindWidgetVisible && !editorMode)) return;
+
+            const entries = Object.entries(keybinds).map(([compoundKey, keyName]) => {
+                const splitIndex = compoundKey.indexOf('-');
+                const label = splitIndex === -1 ? compoundKey : compoundKey.slice(splitIndex + 1);
+                return { label, keyName };
+            }).sort((a, b) => {
+                return a.label.localeCompare(b.label);
+            });
+
+            const rows = entries.map((e) => {
+                return `<div class="keybinds-row"><div class="keybinds-label">${e.label}</div><div class="keybinds-key">${e.keyName}</div></div>`;
+            }).join('');
+
+            widget.innerHTML = `
+                <div class="keybinds-header">
+                    <img class="keybinds-logo" src="https://i.imgur.com/t2Ub2iv.png" alt="Logo" />
+                    <div class="keybinds-title">Keybinds</div>
+                </div>
+                <div class="keybinds-list">
+                    ${rows || `<div class="keybinds-empty">Aucun keybind</div>`}
+                </div>
+            `;
+        }
+
 
         const appContainer = document.getElementById('appContainer');
-        let isDragging = false;
-        let dragStartX = 0;
-        let dragStartY = 0;
+        let dragTarget = null;
+        let dragOffsetX = 0;
+        let dragOffsetY = 0;
 
-        appContainer.addEventListener('mousedown', (e) => {
-            if (!editorMode) return;
-            isDragging = true;
-            dragStartX = e.clientX - appContainer.offsetLeft;
-            dragStartY = e.clientY - appContainer.offsetTop;
-            appContainer.style.cursor = 'grabbing';
-        });
+        function startDrag(el, e) {
+            const rect = el.getBoundingClientRect();
+            if (!el.style.left || !el.style.top) {
+                el.style.left = rect.left + 'px';
+                el.style.top = rect.top + 'px';
+                el.style.right = 'auto';
+                el.style.bottom = 'auto';
+            }
+
+            dragTarget = el;
+            dragOffsetX = e.clientX - rect.left;
+            dragOffsetY = e.clientY - rect.top;
+            el.style.cursor = 'grabbing';
+        }
+
+        function enableEditorDrag(el) {
+            if (!el) return;
+            el.addEventListener('mousedown', (e) => {
+                if (!editorMode) return;
+                e.preventDefault();
+                startDrag(el, e);
+            });
+        }
+
+        enableEditorDrag(appContainer);
+        enableEditorDrag(document.getElementById('keybindsWidget'));
+        enableEditorDrag(document.getElementById('notificationContainer'));
 
         window.addEventListener('mousemove', (e) => {
-            if (!isDragging || !editorMode) return;
-            appContainer.style.left = (e.clientX - dragStartX) + 'px';
-            appContainer.style.top = (e.clientY - dragStartY) + 'px';
+            if (!dragTarget || !editorMode) return;
+            dragTarget.style.left = (e.clientX - dragOffsetX) + 'px';
+            dragTarget.style.top = (e.clientY - dragOffsetY) + 'px';
         });
 
         window.addEventListener('mouseup', () => {
-            if (!editorMode) return;
-            isDragging = false;
-            appContainer.style.cursor = 'grab';
+            if (!dragTarget) return;
+            dragTarget.style.cursor = 'grab';
+            dragTarget = null;
+        });
+
+        // Mouse wheel navigation for Freecam overlay
+        window.addEventListener('wheel', (e) => {
+            if (isFreecamActive) {
+                const optionsCount = document.querySelectorAll('.freecam-option').length;
+                if (optionsCount === 0) return;
+                
+                if (e.deltaY > 0) {
+                    // Scroll down
+                    freecamSelectedIndex = (freecamSelectedIndex + 1) % optionsCount;
+                } else {
+                    // Scroll up
+                    freecamSelectedIndex = (freecamSelectedIndex - 1 + optionsCount) % optionsCount;
+                }
+                updateFreecamSelection();
+            }
         });
 
         function getCurrentMenu() {
@@ -1043,6 +1609,7 @@
             
             if (currentMenu.tabs) {
                 tabsContainer.classList.add('active');
+                tabsContainer.classList.remove('compact');
                 tabsContainer.innerHTML = '';
                 
                 currentMenu.tabs.forEach((tab, index) => {
@@ -1050,6 +1617,11 @@
                     tabDiv.className = `tab-item ${index === activeTabIndex ? 'active' : ''}`;
                     tabDiv.textContent = tab.name;
                     tabsContainer.appendChild(tabDiv);
+                });
+                requestAnimationFrame(() => {
+                    if (tabsContainer.scrollWidth > tabsContainer.clientWidth + 1) {
+                        tabsContainer.classList.add('compact');
+                    }
                 });
             } else {
                 tabsContainer.classList.remove('active');
@@ -1097,10 +1669,20 @@
             headerTitle.style.justifyContent = 'flex-start';
             headerTitle.style.alignItems = 'center';
             headerTitle.style.width = '100%';
+
+            const listContainer = document.getElementById('menuList');
+            const tabsContainer = document.getElementById('tabsContainer');
+            listContainer.classList.add('category-transitioning');
+            tabsContainer.classList.add('category-transitioning');
             
             updateIndex();
             renderTabs();
             renderList();
+
+            requestAnimationFrame(() => {
+                listContainer.classList.remove('category-transitioning');
+                tabsContainer.classList.remove('category-transitioning');
+            });
         }
 
         function updateIndex() {
@@ -1132,15 +1714,20 @@
 
         function renderList() {
             const listContainer = document.getElementById('menuList');
-            listContainer.innerHTML = '';
+            let itemsContainer = listContainer.querySelector('.menu-items');
+            if (!itemsContainer) {
+                itemsContainer = document.createElement('div');
+                itemsContainer.className = 'menu-items';
+                listContainer.appendChild(itemsContainer);
+            }
+
+            itemsContainer.innerHTML = '';
             
             const items = getVisibleItems();
             if (items.length === 0) return;
             
             const startIdx = getScrollWindow();
-            const endIdx = Math.min(startIdx + visibleItemCount, items.length);
             
-
             const itemCount = Math.min(items.length, visibleItemCount);
             const itemHeight = 38;
             const currentMenu = getCurrentMenu();
@@ -1162,7 +1749,7 @@
             scrollbarContainer.style.height = contentHeight + 'px';
             scrollbarContainer.style.marginTop = '165px';
             
-            for (let i = startIdx; i < endIdx; i++) {
+            for (let i = 0; i < items.length; i++) {
                 const item = items[i];
                 
                 if (item.type === 'divider') {
@@ -1173,7 +1760,7 @@
                         <div class="divider-text">${item.label}</div>
                         <div class="divider-line"></div>
                     `;
-                    listContainer.appendChild(div);
+                    itemsContainer.appendChild(div);
                     continue;
                 }
                 
@@ -1184,7 +1771,7 @@
                 label.className = 'item-label';
                 
 
-                if (item.icon) {
+                if (item.icon && getCurrentMenu().id !== 'settings') {
                     const leftIcon = document.createElement('i');
                     leftIcon.className = `${item.icon} item-left-icon`;
                     label.appendChild(leftIcon);
@@ -1211,12 +1798,20 @@
                     toggle.innerHTML = '<div class="toggle-thumb"></div>';
                     div.appendChild(toggle);
                 } else if (item.type === 'color') {
+                    const colorControl = document.createElement('div');
+                    colorControl.className = 'color-control';
+
+                    const preview = document.createElement('div');
+                    preview.className = 'color-preview';
+                    preview.style.backgroundColor = item.value || '#8b00ff';
+
                     const colorPicker = document.createElement('input');
                     colorPicker.type = 'color';
                     colorPicker.className = 'color-picker';
                     colorPicker.value = item.value || '#8b00ff';
                     colorPicker.addEventListener('change', (e) => {
                         item.value = e.target.value;
+                        preview.style.backgroundColor = e.target.value;
                         updateMenuColor(e.target.value);
 
                         window.parent.postMessage(JSON.stringify({
@@ -1224,7 +1819,10 @@
                             color: e.target.value
                         }), '*');
                     });
-                    div.appendChild(colorPicker);
+
+                    colorControl.appendChild(preview);
+                    colorControl.appendChild(colorPicker);
+                    div.appendChild(colorControl);
                 } else if (item.type === 'slider') {
                     const sliderContainer = document.createElement('div');
                     sliderContainer.className = 'slider-container';
@@ -1283,8 +1881,10 @@
                     div.appendChild(icon);
                 }
                 
-                listContainer.appendChild(div);
+                itemsContainer.appendChild(div);
             }
+
+            itemsContainer.style.transform = `translateY(${-startIdx * itemHeight}px)`;
             
             updateScrollbar(startIdx, items.length);
             updateFooter(items);
@@ -1431,6 +2031,10 @@
 
                 if (oldValue !== item.value) {
                     renderList();
+                    
+                    if (item.label === 'Menu banner') {
+                        updateMenuBanner(item.value);
+                    }
 
                     window.parent.postMessage(JSON.stringify({
                         type: 'selectorChange',
@@ -1438,6 +2042,21 @@
                         value: item.value
                     }), '*');
                 }
+            }
+        }
+
+        function updateMenuBanner(colorName) {
+            const bannerMap = {
+                "Purple": "https://i.imgur.com/Zf1ieYe.png",
+                "Red": "https://i.imgur.com/V97xkHB.png",
+                "Green": "https://i.imgur.com/pKl4iC9.png",
+                "Pink": "https://i.imgur.com/cnXKsMi.png",
+                "Black": "https://i.imgur.com/VWLsYuZ.png"
+            };
+            
+            const bannerEl = document.querySelector('.menu-banner');
+            if (bannerEl && bannerMap[colorName]) {
+                bannerEl.style.backgroundImage = `url('${bannerMap[colorName]}')`;
             }
         }
 
@@ -1463,11 +2082,19 @@
                 showNotification('Notification System', 'Bnz', 4000);
             }
 
+            if (item.type === 'color') {
+                const selected = document.querySelector('.menu-item.selected');
+                const picker = selected ? selected.querySelector('input.color-picker') : null;
+                if (picker) picker.click();
+                return;
+            }
+
             if (item.type === 'submenu') {
                 const submenuData = submenus[item.target];
                 if (submenuData) {
                     menuHistory.push(submenuData);
                     currentIndex = 0;
+                    activeTabIndex = 0;
                     initMenu();
                 }
                 return;
@@ -1478,6 +2105,65 @@
                 if (item.label === 'Editor Mod') {
                     editorMode = item.value;
                     appContainer.style.cursor = editorMode ? 'grab' : 'default';
+                    document.body.classList.toggle('editor-mode', editorMode);
+                    setKeybindWidgetVisible(keybindWidgetVisible);
+                    if (editorMode) {
+                        const container = document.getElementById('notificationContainer');
+                        if (container && !container.querySelector('.notification')) {
+                            const preview = document.createElement('div');
+                            preview.className = 'notification show';
+                            preview.innerHTML = `
+                                <div class="notification-icon-container">
+                                    <img class="notification-logo" src="https://i.imgur.com/t2Ub2iv.png" alt="Logo" />
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-title">Preview</div>
+                                    <div class="notification-message">Draggable Elements</div>
+                                </div>
+                            `;
+                            container.appendChild(preview);
+                        }
+                    } else {
+                        const container = document.getElementById('notificationContainer');
+                        if (container) {
+                            const notifs = Array.from(container.querySelectorAll('.notification'));
+                            if (notifs.length === 1) {
+                                const title = notifs[0].querySelector('.notification-title')?.textContent;
+                                if (title === 'Preview') notifs[0].remove();
+                            }
+                        }
+                    }
+                } else if (item.label === 'Keybind list') {
+                    setKeybindWidgetVisible(item.value);
+                } else if (item.label === 'Freecam') {
+                    const overlay = document.getElementById('freecamOverlay');
+                    if (overlay) {
+                        isFreecamActive = item.value;
+                        if (isFreecamActive) {
+                            overlay.classList.add('active');
+                            updateFreecamSelection(); // Ensure selection is styled correctly when showing
+                        } else {
+                            overlay.classList.remove('active');
+                        }
+                    }
+                } else if (item.label === 'Transparent Background') {
+                    const contentWrapper = document.querySelector('.content-wrapper');
+                    if (contentWrapper) {
+                        if (item.value) {
+                            contentWrapper.classList.add('transparent-bg');
+                        } else {
+                            contentWrapper.classList.remove('transparent-bg');
+                        }
+                    }
+                } else if (item.label === 'Spaced Footer') {
+                    const contentFooterGroup = document.querySelector('.content-footer-group');
+                    if (contentFooterGroup) {
+                        if (item.value) {
+                            contentFooterGroup.classList.add('spaced');
+                        } else {
+                            contentFooterGroup.classList.remove('spaced');
+                        }
+                    }
                 }
 
                 renderList();
@@ -1500,6 +2186,32 @@
             if (item.type === 'divider') return;
             executeItem(item, getCurrentMenu().id);
         }
+
+        // Also add native event listeners for testing in browser directly
+        document.addEventListener('keydown', (e) => {
+            if (isFreecamActive) {
+                const key = e.key.toUpperCase();
+                
+                if (key === 'ARROWLEFT' && freecamSelectedIndex === 2) {
+                    currentTeleportIndex = (currentTeleportIndex - 1 + teleportLocations.length) % teleportLocations.length;
+                    updateTeleportLocationDisplay();
+                    e.preventDefault();
+                }
+                else if (key === 'ARROWRIGHT' && freecamSelectedIndex === 2) {
+                    currentTeleportIndex = (currentTeleportIndex + 1) % teleportLocations.length;
+                    updateTeleportLocationDisplay();
+                    e.preventDefault();
+                }
+                else if (key === 'ENTER') {
+                    const selectedOption = document.querySelectorAll('.freecam-option')[freecamSelectedIndex].textContent;
+                    window.parent.postMessage(JSON.stringify({
+                        type: 'freecamAction',
+                        action: selectedOption
+                    }), '*');
+                    e.preventDefault();
+                }
+            }
+        });
 
         window.addEventListener('message', function(event) {
             const data = event.data;
@@ -1562,6 +2274,27 @@
                     pendingBindKey = data.key; 
                     updateBindDisplay(data.key);
                     return;
+                }
+
+                if (isFreecamActive) {
+                    if (key === 'ARROWLEFT' && freecamSelectedIndex === 2) {
+                        currentTeleportIndex = (currentTeleportIndex - 1 + teleportLocations.length) % teleportLocations.length;
+                        updateTeleportLocationDisplay();
+                        return;
+                    }
+                    else if (key === 'ARROWRIGHT' && freecamSelectedIndex === 2) {
+                        currentTeleportIndex = (currentTeleportIndex + 1) % teleportLocations.length;
+                        updateTeleportLocationDisplay();
+                        return;
+                    }
+                    else if (key === 'ENTER') {
+                        const selectedOption = document.querySelectorAll('.freecam-option')[freecamSelectedIndex].textContent;
+                        window.parent.postMessage(JSON.stringify({
+                            type: 'freecamAction',
+                            action: selectedOption
+                        }), '*');
+                        return;
+                    }
                 }
 
                 if (!menuVisible) return;
@@ -1657,6 +2390,7 @@
             
             stopBinding();
             renderList();
+            renderKeybindWidget();
         }
 
 
@@ -1788,10 +2522,12 @@
             notif.className = 'notification';
             notif.innerHTML = `
                 <div class="notification-header">
-                    <i class="fa-solid fa-bell notification-icon"></i>
-                    <div class="notification-title">${title}</div>
+                    <img class="notification-logo" src="https://i.imgur.com/t2Ub2iv.png" alt="Logo" />
+                    <div class="notification-header-text">
+                        <div class="notification-title">${title}</div>
+                        <div class="notification-message">${message}</div>
+                    </div>
                 </div>
-                <div class="notification-message">${message}</div>
                 <div class="notification-progress"></div>
             `;
             
