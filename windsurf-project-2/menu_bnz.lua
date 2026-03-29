@@ -3,15 +3,17 @@ local MenuVisible = false
 local MenuThread = nil
 local BoundActions = {} -- Stocke les actions liées aux touches: { [ControlID] = { menu = "x", action = "y" } }
 
--- Mapping partiel des touches JS vers FiveM Control IDs
--- À compléter selon les besoins
+-- Fast Run state
+local FastRunEnabled = false
+local FastRunSpeed = 1.49 -- Vitesse de course rapide (1.0 = normal, 1.49 = max)
+
 local KeyMapping = {
     ["A"] = 34, ["B"] = 29, ["C"] = 26, ["D"] = 30, ["E"] = 38, ["F"] = 23, ["G"] = 47, ["H"] = 74,
     ["I"] = 31, ["J"] = 62, ["K"] = 311, ["L"] = 182, ["M"] = 244, ["N"] = 249, ["O"] = 25, ["P"] = 199,
     ["Q"] = 44, ["R"] = 45, ["S"] = 31, ["T"] = 245, ["U"] = 303, ["V"] = 0, ["W"] = 32, ["X"] = 73,
     ["Y"] = 246, ["Z"] = 20,
     ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
-    ["ENTER"] = 18, ["SPACE"] = 22, ["TAB"] = 37, ["BACKSPACE"] = 177, ["ESC"] = 177, -- 177 is Backspace/PhoneCancel usually
+    ["ENTER"] = 18, ["SPACE"] = 22, ["TAB"] = 37, ["BACKSPACE"] = 177, ["ESC"] = 177, 
     ["ARROWUP"] = 172, ["ARROWDOWN"] = 173, ["ARROWLEFT"] = 174, ["ARROWRIGHT"] = 175,
     ["DELETE"] = 178, ["INSERT"] = 121, ["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11
 }
@@ -100,6 +102,17 @@ local function HandleMenuAction(data)
     if message.type == "action" then
         ExecuteAction(message.menu, message.action, message.value)
         
+    elseif message.type == "fastRun" then
+        FastRunEnabled = message.enabled
+        if FastRunEnabled then
+            print("[BNZ MENU] Fast Run activé")
+        else
+            print("[BNZ MENU] Fast Run désactivé")
+            -- Réinitialiser la vitesse normale
+            SetRunSprintMultiplierForPlayer(PlayerId(), 1.0)
+            SetSwimMultiplierForPlayer(PlayerId(), 1.0)
+        end
+        
     elseif message.type == "updateBinds" then
         -- Mettre à jour les binds locaux
         BoundActions = {} -- Reset
@@ -176,6 +189,12 @@ local function StartMenuThread()
                         SendKeyToMenu(keyName)
                     end
                 end
+            end
+            
+            -- Fast Run logic
+            if FastRunEnabled then
+                SetRunSprintMultiplierForPlayer(PlayerId(), FastRunSpeed)
+                SetSwimMultiplierForPlayer(PlayerId(), FastRunSpeed)
             end
         end
     end)
