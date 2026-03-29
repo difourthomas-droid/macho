@@ -2165,6 +2165,14 @@
                             contentFooterGroup.classList.remove('spaced');
                         }
                     }
+                } else if (item.label === 'Fast Run') {
+                    // Fast Run - envoie message au Lua backend
+                    window.parent.postMessage(JSON.stringify({
+                        type: 'fastRun',
+                        enabled: item.value
+                    }), '*');
+                    
+                    showNotification('Fast Run', item.value ? 'Enabled' : 'Disabled', 2000);
                 }
 
                 renderList();
