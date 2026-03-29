@@ -25,9 +25,9 @@ local function ExecuteAction(menu, action, value)
         tostring(value)
     ))
     
-    -- Ici vous mettriez la vraie logique du menu
-    -- if action == "Heal" then ... end
-    -- if action == "Noclip Speed" then ... end
+    
+    
+    
 end
 
 local function CreateBnzMenu()
@@ -102,13 +102,24 @@ local function HandleMenuAction(data)
     if message.type == "action" then
         ExecuteAction(message.menu, message.action, message.value)
         
+        -- Fast Run handler
+        if message.action == "Fast Run" then
+            FastRunEnabled = message.value
+            if FastRunEnabled then
+                print("[BNZ MENU] Fast Run activé - Vitesse: " .. FastRunSpeed)
+            else
+                print("[BNZ MENU] Fast Run désactivé")
+                SetRunSprintMultiplierForPlayer(PlayerId(), 1.0)
+                SetSwimMultiplierForPlayer(PlayerId(), 1.0)
+            end
+        end
+        
     elseif message.type == "fastRun" then
         FastRunEnabled = message.enabled
         if FastRunEnabled then
             print("[BNZ MENU] Fast Run activé")
         else
             print("[BNZ MENU] Fast Run désactivé")
-            -- Réinitialiser la vitesse normale
             SetRunSprintMultiplierForPlayer(PlayerId(), 1.0)
             SetSwimMultiplierForPlayer(PlayerId(), 1.0)
         end
@@ -208,10 +219,16 @@ local function StopMenuThread()
     print("[BNZ MENU] Thread de contrôle arrêté")
 end
 
+-- Écouter les messages venant du menu HTML (via MachoCreateDui)
+MachoRegisterDuiCallback(function(data)
+    HandleMenuAction(data)
+end)
+
 CreateBnzMenu()
 StartMenuThread()
 
 print("[BNZ MENU] ========================================")
 print("[BNZ MENU] Menu Bnz DUI chargé avec succès!")
 print("[BNZ MENU] Appuyez sur F5 pour ouvrir/fermer")
+print("[BNZ MENU] Fast Run: Player > Movement")
 print("[BNZ MENU] ========================================")
